@@ -1,6 +1,6 @@
-from typing import Protocol, Any
+from typing import Any, Protocol
 
-from .repositories import UserRepository, ResourceRepository, SourceRepository
+from .repositories import ResourceRepository, SourceRepository, UserRepository
 
 type ResourceQueryParams = Any
 type SourceQueryParams = Any

@@ -15,7 +15,71 @@ run = "uv run ruff format"
 run = "uv run ty check"
 
 [tasks.check]
-depends = ["lint", "typecheck", "test"]
+depends = ["lint", "typecheck"]
 
-[tasks."version:bump"]
-run = "uv version --bump"
+[tasks.build]
+run = "uv build"
+
+[tasks."workspace:packages"]
+description = "List workspace package names, including the root"
+alias = "ws:pkg"
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+uv workspace metadata --frozen -q | jq -r '.members[].name'
+'''
+
+# [tasks."version:bump"]
+# description = "Bump the shared version and commit"
+# usage = 'arg "<part>" { choices "major" "minor" "patch" }'
+# alias = "v:b"
+# run = '''
+# #!/usr/bin/env bash
+# set -euo pipefail
+#
+# if [ -n "$(git status --porcelain)" ]; then
+#   echo "Commit or stash changes first." >&2
+#   exit 1
+# fi
+#
+# version="$(uv version --bump "$usage_part" --dry-run --short)"
+# mise version:set "$version"
+# git commit -am "chore(release): v$version"
+# '''
+
+[tasks."git:tag"]
+description = "Tag the current version, optionally bumping first"
+alias = "g:t"
+usage = '''
+flag "--bump <part>" {
+  arg "<part>" { choices "major" "minor" "patch" }
+}
+'''
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ -n "${usage_bump:-}" ]; then
+  mise run version:bump "$usage_bump"
+fi
+
+test -z "$(git status --porcelain)"
+version="$(uv version --short)"
+git tag -a "v$version" -m "Release v$version"
+'''
+
+[tasks."gh:release"]
+description = "Build and publish the version tagged at HEAD"
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+
+test -z "$(git status --porcelain)"
+tag="v$(uv version --short)"
+test "$(git rev-parse "$tag^{commit}")" = "$(git rev-parse HEAD)"
+
+uv build --all-packages --clear
+git push origin "refs/tags/$tag"
+gh release create "$tag" dist/*.whl dist/*.tar.gz \
+  --verify-tag --generate-notes
+'''

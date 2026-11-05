@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#MISE description = "Bump the shared version and commit"
+#MISE alias = "v:b"
+#USAGE arg "<part>" { choices "major" "minor" "patch" }
+
+set -euxo pipefail
+
+if [ -n "$(git status --porcelain)" ]; then
+  echo "Commit or stash changes first." >&2
+  exit 1
+fi
+
+version="$(uv version --bump "$usage_part" --dry-run --short)"
+mise version:set "$version"
+git commit -am "chore(release): v$version"
