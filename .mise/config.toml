@@ -2,23 +2,35 @@
 python = "3.12"
 uv = "latest"
 
+[vars]
+package_name = "stitch-core"
+
+# --------------------
+# Tasks
+# --------------------
+[tasks.build]
+description = "Build `{{ vars.package_name }}` python package."
+run = "uv build"
+
 [tasks.lint]
+description = "Run the ruff linter."
 run = "uv run ruff check"
 
-[tasks.test]
-run = "uv run pytest"
-
-[tasks.format]
-run = "uv run ruff format"
-
 [tasks.typecheck]
+description = "Run the `ty` type checker."
 run = "uv run ty check"
 
 [tasks.check]
+description = "Lint and typecheck."
 depends = ["lint", "typecheck"]
 
-[tasks.build]
-run = "uv build"
+[tasks.format]
+description = "Run the ruff formatter."
+run = "uv run ruff format"
+
+[tasks.test]
+description = "Run unit tests with pytest"
+run = "uv run pytest"
 
 [tasks."workspace:packages"]
 description = "List workspace package names, including the root"
