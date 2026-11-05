@@ -2,14 +2,19 @@
 #MISE description = "Tag the current version, optionally bumping first"
 #MISE alias = "gt"
 #USAGE flag "-b --bump <part>" {
-#USAGE   arg "<part>" { choices "major" "minor" "patch" }
+#USAGE   choices "major" "minor" "patch"
+#USAGE }
+#USAGE arg "[version]" {
+#USAGE   help "(Optional) set the version before tagging."
 #USAGE }
 set -euxo pipefail
 
 if [ -n "${usage_bump:-}" ]; then
-  mise run version:bump "$usage_bump"
+  mise version:bump "$usage_bump"
+elif [[ -n "${usage_version:-}" ]]; then
+  mise version:set "$usage_version"
 fi
 
-test -z "$(git status --porcelain)"
+test -z "$(git status --porcelain -- '!.mise/')"
 version="$(uv version --short)"
 git tag -a "v$version" -m "Release v$version"
