@@ -1,0 +1,30 @@
+[tools]
+python = "3.12"
+uv = "latest"
+
+[tasks.lint]
+run = "uv run ruff check"
+
+[tasks.test]
+run = "uv run pytest"
+
+[tasks.format]
+run = "uv run ruff format"
+
+[tasks.typecheck]
+run = "uv run ty check"
+
+[tasks.check]
+depends = ["lint", "typecheck"]
+
+[tasks.build]
+run = "uv build"
+
+[tasks."workspace:packages"]
+description = "List workspace package names, including the root"
+alias = "ws:pkg"
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+uv workspace metadata --frozen -q | jq -r '.members[].name'
+'''
