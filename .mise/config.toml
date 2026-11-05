@@ -1,0 +1,21 @@
+[tools]
+python = "3.12"
+uv = "latest"
+
+[tasks.lint]
+run = "uv run ruff check"
+
+[tasks.test]
+run = "uv run pytest"
+
+[tasks.format]
+run = "uv run ruff format"
+
+[tasks.typecheck]
+run = "uv run ty check"
+
+[tasks.check]
+depends = ["lint", "typecheck", "test"]
+
+[tasks."version:bump"]
+run = "uv version --bump"

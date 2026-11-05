@@ -6,19 +6,25 @@ type ResourceQueryParams = Any
 type SourceQueryParams = Any
 type MergeQueryParams = Any
 
-class PersistenceFacade[TResource, TSource, TMerge](Protocol):
 
+class PersistenceFacade[TResource, TSource, TMerge](Protocol):
     _users: UserRepository
     _resources: ResourceRepository
     _sources: SourceRepository
 
-    async def query_resources(self, params: ResourceQueryParams, offset: int, limit: int) -> TResource:
+    async def query_resources(
+        self, params: ResourceQueryParams, offset: int, limit: int
+    ) -> TResource:
         pass
 
-    async def query_sources(self, params: SourceQueryParams, offset: int, limit: int) -> TSource:
+    async def query_sources(
+        self, params: SourceQueryParams, offset: int, limit: int
+    ) -> TSource:
         pass
 
-    async def query_merges(self, params: MergeQueryParams, offset: int, limit: int) -> TMerge:
+    async def query_merges(
+        self, params: MergeQueryParams, offset: int, limit: int
+    ) -> TMerge:
         pass
 
     async def get_resource(self):
