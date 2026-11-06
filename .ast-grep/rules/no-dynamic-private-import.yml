@@ -1,0 +1,13 @@
+id: no-dynamic-private-import
+language: python
+severity: error
+message: "V1: do not reach a private module through a dynamic import."
+files: [src/stitch/**/*.py]
+rule:
+  kind: string
+  regex: '\._'
+  inside:
+    kind: argument_list
+    inside:
+      kind: call
+      has: { field: function, regex: '(import_module|__import__)$' }

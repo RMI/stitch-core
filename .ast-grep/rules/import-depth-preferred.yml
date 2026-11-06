@@ -1,0 +1,9 @@
+id: import-depth-preferred
+language: python
+severity: warning
+message: "L1: import paths should contain no more than two segments."
+files: [src/stitch/**/*.py]
+rule:
+  matches: any-import-path
+  regex: '(\.[^.]+){3,}'
+  not: { regex: '(\.[^.]+){5,}' }
