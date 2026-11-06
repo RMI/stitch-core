@@ -50,7 +50,7 @@ from . import _utils as _u
 
 **I4.** Import members exposed by another package from that package, not its implementation modules.
 
-**I5.** Put imports at the top of the module. The only allowed conditional imports are inside a top-level `if TYPE_CHECKING:` block, also at the top of the module. Resolve import cycles by changing dependencies or moving shared code.
+**I5.** Put imports at the top of the module, before any other code. Conditional imports are permitted at module level, such as an `if TYPE_CHECKING:` block, a version check, or a `try`/`except ImportError` fallback. Do not import inside a function or class body. Resolve import cycles by changing dependencies or moving shared code.
 
 ## Depth
 
@@ -59,9 +59,9 @@ from . import _utils as _u
 For `from` imports, count only the path before `import`. For plain `import` statements, count the imported module path.
 
 ```python
-from .app import operations                       # 1
-from stitch._internal.app import AppContainer     # 2
-from ._internal.app.operations import cut         # 3
+from .app import operations  # 1
+from stitch._internal.app import AppContainer  # 2
+from ._internal.app.operations import cut  # 3
 ```
 
 **L2.** Limit directory depth to five, counting the package root as level one.

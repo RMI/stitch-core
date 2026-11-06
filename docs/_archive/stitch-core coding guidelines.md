@@ -1,4 +1,4 @@
-We leverage conventions to help specify clean interfaces and hide information.
+se leverage conventions to help specify clean interfaces and hide information.
 Use `_` to prefix private symbols, packages, and modules.
 
 Importing
@@ -78,6 +78,7 @@ class Op: ...
 ```python
 # _internal/app/container.py
 
+
 class AppContainer: ...
 ```
 
@@ -97,7 +98,7 @@ from .app.container import AppContainer
 
 # GOOD
 from .app import AppContainer
-from .app.operations import cut, Op # or from .app import operations as app_ops
+from .app.operations import cut, Op  # or from .app import operations as app_ops
 ```
 ```python
 # in src/orchestration.py
