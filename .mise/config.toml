@@ -5,10 +5,16 @@ ast-grep = "0.51.1"
 
 [vars]
 package_name = "stitch-core"
+package_root = "{{ config_root }}/src/stitch"
+tasklib_path = "{{ config_root }}/.mise/tasks/_tasklib"
 
 # --------------------
 # Tasks
 # --------------------
+
+[task_templates.py]
+env.PYTHONPATH = "{{ vars.tasklib_path }}"
+
 [tasks.build]
 description = "Build `{{ vars.package_name }}` python package."
 run = "uv build"
@@ -24,10 +30,6 @@ run = "uv run ty check"
 [tasks."lint:imports"]
 description = "Check import form rules with ast-grep."
 run = "ast-grep scan"
-
-[tasks."lint:structure"]
-description = "Check module layout and visibility rules."
-run = "uv run python scripts/check_layout.py src/stitch"
 
 [tasks.check]
 description = "Lint, check imports and layout, and typecheck."

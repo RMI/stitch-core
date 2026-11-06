@@ -1,3 +1,7 @@
+#!/usr/bin/env -S uv run --script
+# MISE extends="py"
+# MISE description = "Check module layout and visibility rules."
+
 import ast
 import sys
 from collections.abc import Iterator
