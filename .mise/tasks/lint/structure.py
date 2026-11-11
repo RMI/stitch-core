@@ -44,8 +44,12 @@ def bound(tree: ast.Module) -> set[str]:
 
 
 def check(root: Path) -> Iterator[str]:
-    trees = {f: ast.parse(f.read_text()) for f in sorted(root.rglob("*.py"))}
-    inits = {f: t for f, t in trees.items() if f.name == "__init__.py"}
+    trees: dict[Path, ast.Module] = {
+        f: ast.parse(f.read_text()) for f in sorted(root.rglob("*.py"))
+    }
+    inits: dict[Path, ast.Module] = {
+        f: t for f, t in trees.items() if f.name == "__init__.py"
+    }
     exports = {
         mod(root, f): a for f, t in inits.items() if (a := exported(t)) is not None
     }
@@ -92,4 +96,5 @@ def main(argv: list[str]) -> int:
 
 
 if __name__ == "__main__":
+    print("running")
     raise SystemExit(main(sys.argv[1:]))
