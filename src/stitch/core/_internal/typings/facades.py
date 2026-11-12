@@ -16,7 +16,7 @@ class PersistenceFacade[TResource, TSource, TMerge, TId](Protocol):
     __resource_model__: type[TResource]
     __source_model__: type[TSource]
     _users: UserRepository
-    _resources: ResourceRepository[TResource]
+    _resources: ResourceRepository[TResource, TId]
     _sources: SourceRepository[TSource]
 
     async def query_resources(
