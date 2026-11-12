@@ -39,6 +39,19 @@ select = [
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "parents"
 
+[tool.ruff.lint.flake8-type-checking]
+# Pydantic resolves field annotations at runtime, so names used in them must be
+# imported at runtime too. Ruff does not follow inheritance across modules, so
+# this project's own model bases are listed alongside `pydantic.BaseModel`.
+runtime-evaluated-base-classes = [
+  "pydantic.BaseModel",
+  "stitch.core.models.Resource",
+  "stitch.core.models.Resource_",
+  "stitch.core.models.Source",
+  "stitch.core.models.SourcePayload",
+  "stitch.core.models.SourceView",
+]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]

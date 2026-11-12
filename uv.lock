@@ -222,7 +222,7 @@ wheels = [
 ]
 
 [[package]]
-name = "stitch"
+name = "stitch-core"
 version = "0.1.2"
 source = { editable = "." }
 dependencies = [

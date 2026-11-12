@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from datetime import UTC, datetime
-from typing import TYPE_CHECKING, Annotated, Literal
+from typing import Annotated, Literal
 from uuid import UUID, uuid4
 
 import pytest
@@ -16,9 +17,6 @@ from stitch.core.models import (
     SourcePayload,
     SourceRecord,
 )
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping
 
 # ---------------------------------------------------------------------------
 # Source doubles — each specializes to exactly one id type, matching the
