@@ -9,4 +9,4 @@ rule:
   not:
     any:
       - { regex: '^\._[^.]*(\.[^._][^.]*)*$' }
-      - { regex: '^[A-Za-z][^.]*\._internal(\.[^._][^.]*)*$' }
+      - { regex: '^stitch\.core\._internal(\.[^._][^.]*)*$' }
