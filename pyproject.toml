@@ -1,6 +1,6 @@
 [project]
-name = "stitch-core"
-version = "0.1.0"
+name = "stitch"
+version = "0.1.2"
 description = "Add your description here"
 readme = "README.md"
 authors = [{ name = "Michael Barlow", email = "mbarlow@rmi.org" }]
@@ -20,4 +20,25 @@ module-name = ["stitch.core"]
 dev = ["pytest>=9.2.0", "ruff>=0.17.3", "ty>=0.0.97"]
 
 [project.scripts]
-core = "stitch.core:hello"
+core = "stitch:hello"
+
+[tool.ruff]
+extend-exclude = ["_exclude"]
+
+[tool.ruff.lint]
+select = [
+  "E",
+  "F",
+  "I",
+  "TID",
+  "SLF",
+  "TC",
+  "PLC0415",
+  "PLE0604",
+  "PLE0605",
+  "RUF022",
+  "RUF068",
+]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "parents"

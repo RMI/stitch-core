@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+#MISE description = "Build and publish the version tagged at HEAD to GitHub"
+set -euxo pipefail
+
+test -z "$(git status --porcelain)"
+tag="v$(uv version --short)"
+test "$(git rev-parse "$tag^{commit}")" = "$(git rev-parse HEAD)"
+
+uv build --all-packages --clear
+git push origin "refs/tags/$tag"
+gh release create "$tag" dist/*.whl dist/*.tar.gz \
+  --verify-tag --generate-notes

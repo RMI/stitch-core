@@ -1,0 +1,7 @@
+id: any-import-path
+language: python
+rule:
+  any:
+    - { kind: relative_import, inside: { kind: import_from_statement, field: module_name } }
+    - { kind: dotted_name, inside: { kind: import_from_statement, field: module_name } }
+    - { kind: dotted_name, inside: { kind: import_statement, field: name, stopBy: end } }
