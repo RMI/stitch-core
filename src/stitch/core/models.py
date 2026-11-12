@@ -41,9 +41,7 @@ class Source[TId: IdType, TSrcKey: str](BaseModel):
     source_record: SourceRecord
 
     # we set `from_attributes=True` to accommodate ORM or other object mappings
-    model_config: ClassVar[ConfigDict] = ConfigDict(
-        from_attributes=True, extra="ignore"
-    )
+    model_config: ClassVar[ConfigDict] = ConfigDict(from_attributes=True, extra="ignore")
 
 
 class SourceView[TId: IdType, TSrcKey: str](Source[TId, TSrcKey]):

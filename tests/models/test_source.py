@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 from uuid import UUID, uuid4
 
 import pytest
@@ -19,8 +20,11 @@ from .conftest import (
     UuidSource,
 )
 
+if TYPE_CHECKING:
+    from pydantic_core import ErrorDetails
 
-def assert_has_error(errors: list[dict], *, type: str, loc: tuple) -> None:
+
+def assert_has_error(errors: list[ErrorDetails], *, type: str, loc: tuple) -> None:
     assert any(e["type"] == type and e["loc"] == loc for e in errors), (
         f"Expected {type} at {loc}, got: {[e['type'] + ' @ ' + str(e['loc']) for e in errors]}"
     )
@@ -185,6 +189,7 @@ class TestSourceValidation:
             }
         )
         assert record.record_id == "rec-1"
+        assert isinstance(record.payload, dict)
         assert record.payload["kind"] == "seed_faker"
 
     def test_source_requires_source_record(self):

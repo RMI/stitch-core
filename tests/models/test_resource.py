@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import json
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 from uuid import UUID, uuid4
 
 import pytest
 from pydantic import ValidationError
+
 from stitch.core.models import SourceRecord
-from datetime import UTC, datetime
 
 from .conftest import (
     BarSource,
@@ -23,8 +25,11 @@ from .conftest import (
     UuidSource,
 )
 
+if TYPE_CHECKING:
+    from pydantic_core import ErrorDetails
 
-def assert_has_error(errors: list[dict], *, type: str, loc: tuple) -> None:
+
+def assert_has_error(errors: list[ErrorDetails], *, type: str, loc: tuple) -> None:
     assert any(e["type"] == type and e["loc"] == loc for e in errors), (
         f"Expected {type} at {loc}, got: {[e['type'] + ' @ ' + str(e['loc']) for e in errors]}"
     )

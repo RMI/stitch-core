@@ -2,21 +2,23 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
 from datetime import UTC, datetime
-from typing import Annotated, Literal
+from typing import TYPE_CHECKING, Annotated, Literal
 from uuid import UUID, uuid4
 
-from pydantic import Field
 import pytest
+from pydantic import Field
 
 from stitch.core.models import (
-    Resource_,
     Resource,
+    Resource_,
     Source,
-    SourceRecord,
     SourcePayload,
+    SourceRecord,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 # ---------------------------------------------------------------------------
 # Source doubles — each specializes to exactly one id type, matching the
