@@ -6,7 +6,6 @@ ast-grep = "0.51.1"
 [vars]
 package_name = "stitch-core"
 package_root = "{{ config_root }}/src/stitch"
-tasklib_path = "{{ config_root }}/.mise/tasks/_tasklib"
 
 # --------------------
 # Tasks
@@ -39,6 +38,13 @@ run = "uv run ruff format"
 [tasks.test]
 description = "Run unit tests with pytest"
 run = "uv run pytest"
+
+[tasks."version:set"]
+alias = "v:set"
+usage = '''
+arg "<version>" help="The full version to set."
+'''
+run = "uv version {{ usage.version }}"
 
 [tasks."workspace:packages"]
 description = "List workspace package names, including the root"
