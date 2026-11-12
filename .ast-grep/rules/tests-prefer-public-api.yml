@@ -1,6 +1,0 @@
-id: tests-prefer-public-api
-language: python
-severity: warning
-message: "T1: prefer importing the published API over a private module."
-files: [tests/**/*.py]
-rule: { matches: any-import-path, regex: '(^|\.)_' }
