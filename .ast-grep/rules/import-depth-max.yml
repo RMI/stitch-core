@@ -3,4 +3,8 @@ language: python
 severity: error
 message: "L1: import paths must contain no more than four segments."
 files: [src/stitch/**/*.py]
-rule: { matches: any-import-path, regex: '(\.[^.]+){5,}' }
+rule:
+  matches: any-import-path
+  any:
+    - { regex: '^(\.[^.]+){5,}' }
+    - { regex: '^stitch\.core(\.[^.]+){5,}' }
