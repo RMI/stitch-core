@@ -29,6 +29,11 @@ run = "uv run ty check"
 description = "Check import form rules with ast-grep."
 run = "ast-grep scan"
 
+[tasks."lint:structure"]
+description = "Check package directory layout."
+run = 'uv run python scripts/check_layout.py "{{ vars.package_root }}"'
+
+
 [tasks.check]
 description = "Lint, check imports and layout, and typecheck."
 depends = ["lint", "lint:imports", "lint:structure", "typecheck"]
@@ -46,20 +51,39 @@ alias = "v:set"
 usage = '''
 arg "<version>" help="The full version to set."
 '''
-run = "uv version {{ usage.version }}"
+run = "uv version {{ usage.version }} --no-sync"
 
 [tasks."version:bump"]
 alias = "v:b"
 usage = '''
 arg "<parts>" var=#true { choices "major" "minor" "patch" "alpha" "beta" "rc" "dev" }
 '''
-run = 'uv version --bump {{ usage.parts | join(sep=" --bump ") }}'
+run = 'uv version --bump {{ usage.parts | join(sep=" --bump ") }} --no-sync'
 
-[tasks."workspace:packages"]
-description = "List workspace package names, including the root"
-alias = "ws:pkg"
+[tasks."version:commit"]
+alias = "v:c"
+description = "Commit the version and lockfile changes."
 run = '''
-#!/usr/bin/env bash
-set -euo pipefail
-uv workspace metadata --frozen -q | jq -r '.members[].name'
+git commit --only -m "chore(release): v$(uv version --short)" -- pyproject.toml uv.lock
 '''
+
+[tasks."git:tag"]
+description = "Tag the committed version."
+run = '''
+set -e
+test -z "$(git status --porcelain)"
+version="$(uv version --short)"
+git tag -a "v$version" -m "Release v$version"
+'''
+
+[tasks."release:prepare"]
+description = "Bump the version, commit it, and create a local tag."
+usage = '''
+arg "<parts>" var=#true { choices "major" "minor" "patch" "alpha" "beta" "rc" "dev" }
+'''
+run = [
+  'test -z "$(git status --porcelain)"',
+  'mise run version:bump {{ usage.parts | join(sep=" ") }}',
+  { task = "version:commit" },
+  { task = "git:tag" },
+]
