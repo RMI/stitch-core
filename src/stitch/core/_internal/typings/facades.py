@@ -16,7 +16,7 @@ class PersistenceFacade[TResource, TSource, TMerge, TId](Protocol):
     __resource_model__: type[TResource]
     __source_model__: type[TSource]
     _users: UserRepository
-    _resources: ResourceRepository[TResource]
+    _resources: ResourceRepository[TResource, TId]
     _sources: SourceRepository[TSource]
 
     async def query_resources(
@@ -24,9 +24,7 @@ class PersistenceFacade[TResource, TSource, TMerge, TId](Protocol):
     ) -> Collection[TResource]:
         pass
 
-    async def query_resource_values(
-        self, params: ResourceQueryParams
-    ) -> Collection[TResource]:
+    async def query_resource_values(self, params: ResourceQueryParams) -> Collection[TResource]:
         """For filter options."""
         pass
 
