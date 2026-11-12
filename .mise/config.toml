@@ -4,6 +4,7 @@
 python = "3.12"
 uv = "latest"
 ast-grep = "0.51.1"
+sd = "latest"
 
 [vars]
 package_name = "stitch-core"
