@@ -1,0 +1,12 @@
+id: private-segment-position
+language: python
+severity: error
+message: "I2: a private segment may appear only first in a relative path, or as `_internal` after the root package."
+files: [src/stitch/**/*.py]
+rule:
+  matches: any-import-path
+  regex: '\._'
+  not:
+    any:
+      - { regex: '^\._[^.]*(\.[^._][^.]*)*$' }
+      - { regex: '^stitch\.core\._internal(\.[^._][^.]*)*$' }

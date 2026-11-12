@@ -1,0 +1,14 @@
+id: private-member-import
+language: python
+severity: error
+message: "I3/T3: do not import a private member from another module."
+files: [src/stitch/**/*.py]
+rule:
+  kind: dotted_name
+  regex: "^_"
+  inside: { kind: import_from_statement, field: name, stopBy: end }
+  not:
+    inside:
+      kind: import_from_statement
+      stopBy: end
+      has: { field: module_name, kind: relative_import, regex: '^\.$' }
