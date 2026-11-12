@@ -12,9 +12,6 @@ tasklib_path = "{{ config_root }}/.mise/tasks/_tasklib"
 # Tasks
 # --------------------
 
-[task_templates.py]
-env.PYTHONPATH = "{{ vars.tasklib_path }}"
-
 [tasks.build]
 description = "Build `{{ vars.package_name }}` python package."
 run = "uv build"
