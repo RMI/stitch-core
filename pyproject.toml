@@ -1,7 +1,7 @@
 [project]
-name = "stitch"
+name = "stitch-core"
 version = "0.1.2"
-description = "Add your description here"
+description = "Core functionality for the Stitch platform."
 readme = "README.md"
 authors = [{ name = "Michael Barlow", email = "mbarlow@rmi.org" }]
 requires-python = ">=3.12"

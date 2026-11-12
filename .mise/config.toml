@@ -40,8 +40,8 @@ description = "Lint, check imports and layout, and typecheck."
 depends = ["lint", "lint:imports", "lint:structure", "typecheck"]
 
 [tasks.format]
-description = "Run the ruff formatter."
-run = "uv run ruff format"
+description = "Sort imports and run the ruff formatter."
+run = ["uv run ruff check --select I --fix", "uv run ruff format"]
 
 [tasks.test]
 description = "Run unit tests with pytest"
