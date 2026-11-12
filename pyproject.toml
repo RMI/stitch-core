@@ -1,6 +1,6 @@
 [project]
 name = "stitch"
-version = "0.1.2"
+version = "1.0.0"
 description = "Add your description here"
 readme = "README.md"
 authors = [{ name = "Michael Barlow", email = "mbarlow@rmi.org" }]
@@ -10,34 +10,32 @@ requires-python = ">=3.12"
 requires = ["uv_build>=0.13.7,<0.14.0"]
 build-backend = "uv_build"
 
+[tool.uv.build-backend]
+module-name = ["stitch.core"]
+
 [dependency-groups]
-dev = [
-    "pytest>=9.2.0",
-    "ruff>=0.17.3",
-    "ty>=0.0.97",
-]
+dev = ["pytest>=9.2.0", "ruff>=0.17.3", "ty>=0.0.97"]
 
 [project.scripts]
 core = "stitch:hello"
 
 [tool.ruff]
-extend-exclude = ["_local"]
+extend-exclude = ["_exclude"]
 
 [tool.ruff.lint]
 select = [
-    "E",
-    "F",
-    "I",
-    "TID",
-    "SLF",
-    "TC",
-    "PLC0415",
-    "PLE0604",
-    "PLE0605",
-    "RUF022",
-    "RUF068",
+  "E",
+  "F",
+  "I",
+  "TID",
+  "SLF",
+  "TC",
+  "PLC0415",
+  "PLE0604",
+  "PLE0605",
+  "RUF022",
+  "RUF068",
 ]
 
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "parents"
-
