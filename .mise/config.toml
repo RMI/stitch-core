@@ -46,6 +46,13 @@ arg "<version>" help="The full version to set."
 '''
 run = "uv version {{ usage.version }}"
 
+[tasks."version:bump"]
+alias = "v:b"
+usage = '''
+arg "<parts>" var=#true { choices "major" "minor" "patch" "alpha" "beta" "rc" "dev" }
+'''
+run = 'uv version --bump {{ usage.parts | join(sep=" --bump ") }}'
+
 [tasks."workspace:packages"]
 description = "List workspace package names, including the root"
 alias = "ws:pkg"

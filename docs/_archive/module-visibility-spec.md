@@ -7,7 +7,7 @@ These rules apply to all code under each distribution's `src/`, including public
 Directives are required unless marked **should**. A **should** rule requires a reason for an exception.
 
 - **Distribution:** a project configured for build in `pyproject.toml`. Each `src/` tree belongs to one distribution. Additional separately published packages must be uv workspace members.
-- **Package root:** the top directory of a distribution's import namespace, such as `src/stitch/`.
+- **Package root:** the top directory of a distribution's import namespace, such as `src/stitch.core/`.
 - **Private name:** a module, package, or member name beginning with `_`.
 - **Public name:** any other name.
 - **Neighbour:** a module or package in the importer's directory, including that directory's `__init__.py`.
@@ -30,10 +30,10 @@ Directives are required unless marked **should**. A **should** rule requires a r
 **I1.** Use a single-dot relative import for neighbours, including paths through sibling packages. Use an absolute path from the package root otherwise. Never use two or more leading dots.
 
 ```python
-# src/stitch/parent/baz.py
+# src/stitch.core/parent/baz.py
 from ._foo import FooClass
 from ._bar.sub_bar import sub_bar_func
-from stitch._internal.app import AppContainer
+from stitch.core.core._internal.app import AppContainer
 ```
 
 **I2.** A private module or package name may appear only:
@@ -60,7 +60,7 @@ For `from` imports, count only the path before `import`. For plain `import` stat
 
 ```python
 from .app import operations  # 1
-from stitch._internal.app import AppContainer  # 2
+from stitch.core.core._internal.app import AppContainer  # 2
 from ._internal.app.operations import cut  # 3
 ```
 
@@ -78,7 +78,7 @@ src/<pkg>/a/b/c/d/e/__init__.py    # prohibited: depth 6
 **D1.** In `__init__.py`, define public members directly or re-export them. List every re-exported member in `__all__`.
 
 ```python
-# src/stitch/_internal/app/__init__.py
+# src/stitch.core/_internal/app/__init__.py
 from ._container import AppContainer
 
 __all__ = ["AppContainer"]

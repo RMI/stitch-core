@@ -10,7 +10,7 @@ check, **none** means the rule is permissive and there is nothing to check.
 checks are voluntary until someone runs the task.
 
 `_local/` (gitignored) holds two sample packages for exercising the rules by hand. Run
-`ast-grep scan`, `ruff check .`, and `python ../../scripts/check_layout.py src/stitch` from inside
+`ast-grep scan`, `ruff check .`, and `python ../../scripts/check_layout.py src/stitch.core` from inside
 `_local/clean` or `_local/violations`. The clean tree passes all three; the violations tree fails
 all three, and between them they cover every gated rule.
 
@@ -99,11 +99,11 @@ spec's own mechanism for a justified exception. This does not conflict with T2, 
 private modules rather than private members.
 
 A4 is likewise promoted to a gate, since a name in `__all__` that is not bound breaks
-`from stitch import *` outright.
+`from stitch.core import *` outright.
 
 ## Notes
 
-- The ast-grep rules hard-code the root package name `stitch` in their regexes and `files` globs.
+- The ast-grep rules hard-code the root package name `stitch.core` in their regexes and `files` globs.
   Renaming the package root means updating `private-segment-position.yml`,
   `tests-prefer-public-api.yml`, and the `files` globs in the other rules.
 - Tools: ruff, ty, pytest, and ast-grep.

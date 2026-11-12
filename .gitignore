@@ -219,5 +219,5 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# Local scratch packages for exercising the lint rules.
-_local/
+# Local scratch directory
+_exclude/
