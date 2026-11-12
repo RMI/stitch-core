@@ -2,7 +2,7 @@
 #MISE description = "Build and publish the version tagged at HEAD"
 set -euxo pipefail
 
-test -z "$(git status --porcelain -- '!.mise/')"
+test -z "$(git status --porcelain)"
 tag="v$(uv version --short)"
 test "$(git rev-parse "$tag^{commit}")" = "$(git rev-parse HEAD)"
 
