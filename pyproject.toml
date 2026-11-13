@@ -40,9 +40,10 @@ select = [
 ban-relative-imports = "parents"
 
 [tool.ruff.lint.flake8-type-checking]
-# Pydantic resolves field annotations at runtime, so names used in them must be
-# imported at runtime too. Ruff does not follow inheritance across modules, so
-# this project's own model bases are listed alongside `pydantic.BaseModel`.
+# 2026-11-12: Pydantic resolves field annotations at runtime, so annotations that typically
+# fall under a TYPE_CHECKING block raise errors. This config ensures ruff doesn't raise errors
+# when annotations like Mapping or Sequence aren't nested under TYPE_CHECKING.
+# review-after: 2026-11-29
 runtime-evaluated-base-classes = [
   "pydantic.BaseModel",
   "stitch.core.models.Resource",
