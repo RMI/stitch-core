@@ -7,9 +7,22 @@ from typing import (
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from ._internal.typings import IdType, JsonValue
+from ._internal.typings import (
+    CountryCodeAlpha3,
+    FractionalPercentage,
+    IdType,
+    JsonValue,
+    Latitude,
+    Longitude,
+)
 
 __all__ = [
+    "CountryCodeAlpha3",
+    "FractionalPercentage",
+    "IdType",
+    "JsonValue",
+    "Latitude",
+    "Longitude",
     "Resource",
     "Source",
     "SourcePayload",
