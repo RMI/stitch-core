@@ -7,13 +7,14 @@ from typing import (
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from ._internal.typings import (
+from ._internal.typings.models import (
     CountryCodeAlpha3,
     FractionalPercentage,
     IdType,
     JsonValue,
     Latitude,
     Longitude,
+    Year,
 )
 
 __all__ = [
@@ -29,6 +30,7 @@ __all__ = [
     "SourceRecord",
     "SourceRefTuple",
     "SourceView",
+    "Year",
 ]
 
 
