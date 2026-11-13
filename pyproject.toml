@@ -1,6 +1,6 @@
 [project]
 name = "rmi-stitch-core"
-version = "0.2.0.dev3"
+version = "0.2.0.dev4"
 description = "Core functionality for the Stitch platform."
 readme = "README.md"
 authors = [{ name = "Michael Barlow", email = "mbarlow@rmi.org" }]
