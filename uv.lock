@@ -223,7 +223,7 @@ wheels = [
 
 [[package]]
 name = "stitch-core"
-version = "0.1.2"
+version = "0.2.0.dev1"
 source = { editable = "." }
 dependencies = [
     { name = "pydantic" },
