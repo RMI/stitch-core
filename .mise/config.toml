@@ -4,6 +4,7 @@
 python = "3.12"
 uv = "latest"
 ast-grep = "0.51.1"
+sd = "latest"
 
 [vars]
 package_name = "stitch-core"
@@ -36,7 +37,7 @@ run = 'uv run python scripts/check_layout.py "{{ vars.package_root }}"'
 
 [tasks.check]
 description = "Lint, check imports and layout, and typecheck."
-depends = ["lint", "lint:imports", "lint:structure", "typecheck"]
+depends = ["lint", "lint:imports", "lint:structure", "typecheck", "test"]
 
 [tasks.format]
 description = "Sort imports and run the ruff formatter."
