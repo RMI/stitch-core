@@ -14,7 +14,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        task: [lint, typecheck, test]
+        task:
+          - lint
+          - "lint:imports"
+          - "lint:structure"
+          - typecheck
+          - test
     steps:
       - uses: actions/checkout@v7
       - uses: jdx/mise-action@v5
