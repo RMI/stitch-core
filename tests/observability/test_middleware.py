@@ -6,8 +6,8 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from stitch.observability import middleware as mw
-from stitch.observability.middleware import RequestContextMiddleware
+from stitch.core.observability import middleware as mw
+from stitch.core.observability.middleware import RequestContextMiddleware
 
 
 def _make_app(middleware_cls=RequestContextMiddleware) -> FastAPI:
@@ -22,12 +22,12 @@ def _make_app(middleware_cls=RequestContextMiddleware) -> FastAPI:
 
 
 def _request_events(caplog) -> list[dict]:
-    return [r.event for r in caplog.records if r.name == "stitch.observability.request"]
+    return [r.event for r in caplog.records if r.name == "stitch.core.observability.request"]
 
 
 def test_emits_summary_and_sets_request_id_header(caplog) -> None:
     client = TestClient(_make_app())
-    with caplog.at_level(logging.INFO, logger="stitch.observability.request"):
+    with caplog.at_level(logging.INFO, logger="stitch.core.observability.request"):
         response = client.get("/things/42")
 
     assert response.status_code == 200
@@ -47,7 +47,7 @@ def test_emits_summary_and_sets_request_id_header(caplog) -> None:
 
 def test_scenario_header_is_captured_and_truncated(caplog) -> None:
     client = TestClient(_make_app())
-    with caplog.at_level(logging.INFO, logger="stitch.observability.request"):
+    with caplog.at_level(logging.INFO, logger="stitch.core.observability.request"):
         client.get("/things/1", headers={"X-Stitch-Perf-Scenario": "x" * 200})
 
     assert len(_request_events(caplog)[-1]["scenario"]) == 80
@@ -70,7 +70,7 @@ def test_subclass_hooks_add_fields(caplog) -> None:
             finished.append(state)
 
     client = TestClient(_make_app(WithExtras))
-    with caplog.at_level(logging.INFO, logger="stitch.observability.request"):
+    with caplog.at_level(logging.INFO, logger="stitch.core.observability.request"):
         client.get("/things/7")
 
     assert _request_events(caplog)[-1]["widget_count"] == 3
@@ -120,7 +120,7 @@ def test_middleware_import_without_starlette_points_at_asgi_extra(monkeypatch) -
     # they're restored at teardown and the suite stays order-independent.
 
     # Force the guarded imports to run again on re-import.
-    monkeypatch.delitem(sys.modules, "stitch.observability.middleware", raising=False)
+    monkeypatch.delitem(sys.modules, "stitch.core.observability.middleware", raising=False)
     # Make `import starlette` fail: drop cached submodules and point the parent at
     # None — the canonical way to make an installed package look absent.
     for name in list(sys.modules):
@@ -129,4 +129,4 @@ def test_middleware_import_without_starlette_points_at_asgi_extra(monkeypatch) -
     monkeypatch.setitem(sys.modules, "starlette", None)
 
     with pytest.raises(ModuleNotFoundError, match=r"stitch-observability\[asgi\]"):
-        importlib.import_module("stitch.observability.middleware")
+        importlib.import_module("stitch.core.observability.middleware")

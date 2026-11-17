@@ -2,7 +2,7 @@
 
 Installs a single stdout handler on the root logger with a JSON formatter, so
 the per-request / per-query events (and the span records emitted by
-:class:`~stitch.observability.tracing.LoggingSpanExporter`) are machine-parseable
+:class:`~stitch.core.observability.tracing.LoggingSpanExporter`) are machine-parseable
 in Log Analytics. Optionally stamps a fixed set of resource attributes
 (``deployment.name``, ``service.version``, ...) onto every record so logs carry
 the same deployment metadata as trace spans and can be sliced/compared across

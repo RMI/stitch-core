@@ -9,14 +9,14 @@ from opentelemetry.sdk.trace.export.in_memory_span_exporter import (
     InMemorySpanExporter,
 )
 
-from stitch.observability import (
+from stitch.core.observability import (
     OTelSettings,
     configure_tracing,
     setup_fastapi_tracing,
     setup_sqlalchemy_tracing,
 )
-from stitch.observability import tracing as pkg_tracing
-from stitch.observability.tracing import LoggingSpanExporter
+from stitch.core._internal.observability import tracing as pkg_tracing
+from stitch.core.observability import LoggingSpanExporter
 
 
 def test_configure_tracing_disabled_returns_none() -> None:
@@ -160,11 +160,11 @@ def test_logging_span_exporter_emits_one_record_per_span(caplog) -> None:
     provider.add_span_processor(SimpleSpanProcessor(exporter))
     tracer = provider.get_tracer("test")
 
-    with caplog.at_level(logging.INFO, logger="stitch.observability.trace"):
+    with caplog.at_level(logging.INFO, logger="stitch.core.observability.trace"):
         with tracer.start_as_current_span("unit-span"):
             pass
 
-    records = [r for r in caplog.records if r.name == "stitch.observability.trace"]
+    records = [r for r in caplog.records if r.name == "stitch.core.observability.trace"]
     assert len(records) == 1
     assert records[0].event["span_name"] == "unit-span"
     assert "trace_id" in records[0].event
@@ -182,11 +182,11 @@ def test_logging_span_exporter_truncates_long_attributes(caplog) -> None:
     tracer = provider.get_tracer("test")
 
     long_value = "x" * 5000
-    with caplog.at_level(logging.INFO, logger="stitch.observability.trace"):
+    with caplog.at_level(logging.INFO, logger="stitch.core.observability.trace"):
         with tracer.start_as_current_span("big-span") as span:
             span.set_attribute("db.statement", long_value)
 
-    records = [r for r in caplog.records if r.name == "stitch.observability.trace"]
+    records = [r for r in caplog.records if r.name == "stitch.core.observability.trace"]
     logged = records[0].event["attributes"]["db.statement"]
     assert logged.endswith("…")
     assert len(logged) == 2000 + 1  # 2000-char cap + the ellipsis
@@ -201,12 +201,12 @@ def test_logging_span_exporter_truncates_sequence_attributes(caplog) -> None:
     tracer = provider.get_tracer("test")
 
     long_value = "x" * 5000
-    with caplog.at_level(logging.INFO, logger="stitch.observability.trace"):
+    with caplog.at_level(logging.INFO, logger="stitch.core.observability.trace"):
         with tracer.start_as_current_span("seq-span") as span:
             span.set_attribute("tags", (long_value, "short"))
             span.set_attribute("many", tuple(str(i) for i in range(150)))
 
-    attrs = [r for r in caplog.records if r.name == "stitch.observability.trace"][
+    attrs = [r for r in caplog.records if r.name == "stitch.core.observability.trace"][
         0
     ].event["attributes"]
     tags = attrs["tags"]
@@ -225,11 +225,11 @@ def test_logging_span_exporter_truncates_resource_attributes(caplog) -> None:
     provider.add_span_processor(SimpleSpanProcessor(exporter))
     tracer = provider.get_tracer("test")
 
-    with caplog.at_level(logging.INFO, logger="stitch.observability.trace"):
+    with caplog.at_level(logging.INFO, logger="stitch.core.observability.trace"):
         with tracer.start_as_current_span("s"):
             pass
 
-    records = [r for r in caplog.records if r.name == "stitch.observability.trace"]
+    records = [r for r in caplog.records if r.name == "stitch.core.observability.trace"]
     logged = records[0].event["resource"]["deployment.name"]
     assert logged.endswith("…")
     assert len(logged) == 2000 + 1

@@ -1,7 +1,7 @@
 import json
 import logging
 
-from stitch.observability import (
+from stitch.core.observability import (
     JsonFormatter,
     ResourceAttributesFilter,
     resource_attributes_from_env,

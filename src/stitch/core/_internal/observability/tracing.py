@@ -38,7 +38,7 @@ if TYPE_CHECKING:
 
     from .settings import OTelSettings
 
-_span_logger = logging.getLogger("stitch.observability.trace")
+_span_logger = logging.getLogger("stitch.core.observability.trace")
 
 # Bound attribute values before they are logged. Long strings — notably
 # SQLAlchemy's ``db.statement`` (big IN (...) lists, wide CTEs) — and large array
@@ -87,7 +87,7 @@ class LoggingSpanExporter(SpanExporter):
     """Export finished spans as structured log records instead of shipping them
     to a collector.
 
-    Each span becomes one ``stitch.observability.trace`` log record whose
+    Each span becomes one ``stitch.core.observability.trace`` log record whose
     ``event`` dict a JSON log formatter can flatten, so fields like ``trace_id``
     / ``duration_ms`` sit alongside request / query events on the same stream.
     """

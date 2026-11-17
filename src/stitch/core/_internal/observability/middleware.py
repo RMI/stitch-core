@@ -30,7 +30,7 @@ except ModuleNotFoundError as exc:
     # the tracing/logging core stays framework-free. Fail with a clear pointer
     # rather than a bare import error when this ASGI-only module is imported.
     raise ModuleNotFoundError(
-        "stitch.observability.middleware requires Starlette; "
+        "stitch.core.observability.middleware requires Starlette; "
         "install it via the extra: stitch-observability[asgi]"
     ) from exc
 
@@ -38,7 +38,7 @@ if TYPE_CHECKING:
     from starlette.requests import Request
     from starlette.responses import Response
 
-_request_logger = logging.getLogger("stitch.observability.request")
+_request_logger = logging.getLogger("stitch.core.observability.request")
 
 # Headers we invent are namespaced ``X-Stitch-*`` so their provenance is clear
 # and they can't collide with standard/proxy headers. ``X-Request-ID`` is left
