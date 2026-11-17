@@ -34,9 +34,13 @@ description = "Check package directory layout."
 run = 'uv run python scripts/check_layout.py "{{ vars.package_root }}"'
 
 
+[tasks."format:check"]
+description = "Check formatting with ruff."
+run = "uv run ruff format --check"
+
 [tasks.check]
-description = "Lint, check imports and layout, and typecheck."
-depends = ["lint", "lint:imports", "lint:structure", "typecheck"]
+description = "Lint, check imports, layout and formatting, and typecheck."
+depends = ["lint", "lint:imports", "lint:structure", "format:check", "typecheck"]
 
 [tasks.format]
 description = "Sort imports and run the ruff formatter."
