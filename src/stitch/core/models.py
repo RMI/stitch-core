@@ -5,13 +5,12 @@ from typing import (
     NamedTuple,
 )
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, JsonValue, model_validator
 
 from ._internal.typings.models import (
     CountryCodeAlpha3,
     FractionalPercentage,
     IdType,
-    JsonValue,
     Latitude,
     Longitude,
     Year,
@@ -21,7 +20,6 @@ __all__ = [
     "CountryCodeAlpha3",
     "FractionalPercentage",
     "IdType",
-    "JsonValue",
     "Latitude",
     "Longitude",
     "Resource",

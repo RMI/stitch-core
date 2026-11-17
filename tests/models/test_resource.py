@@ -102,9 +102,7 @@ class TestResourceSubclassing:
 
     def test_repointed_to_and_constituents_independent(self, foo_payload):
         """Both can be set simultaneously — they are independent fields."""
-        resource = FooResource(
-            id=1, source_data=foo_payload, repointed_to=99, constituents={2, 3}
-        )
+        resource = FooResource(id=1, source_data=foo_payload, repointed_to=99, constituents={2, 3})
         assert resource.repointed_to == 99
         assert resource.constituents == frozenset({2, 3})
 
@@ -176,9 +174,7 @@ class TestResourceValidation:
         assert error_types & {"int_parsing", "literal_error", "missing"}
 
     def test_rejects_non_coercible_mapping_key(self):
-        payload = json.dumps(
-            {"foos": {"abc": {"id": 1, "source": "foo", "value": 3.14}}}
-        )
+        payload = json.dumps({"foos": {"abc": {"id": 1, "source": "foo", "value": 3.14}}})
         with pytest.raises(ValidationError) as exc_info:
             FooPayload.model_validate_json(payload)
         assert_has_error(

@@ -4,10 +4,9 @@
 python = "3.12"
 uv = "latest"
 ast-grep = "0.51.1"
-sd = "latest"
 
 [vars]
-package_name = "stitch-core"
+package_name = "rmi-stitch-core"
 package_root = "{{ config_root }}/src/stitch/core"
 
 # --------------------

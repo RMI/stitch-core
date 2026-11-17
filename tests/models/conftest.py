@@ -99,9 +99,7 @@ class ResourceWithSrcUnion(Resource[int, TestSrcUnion]):
 
 
 class FooSourceORM:
-    def __init__(
-        self, id: int, source: str, value: float, source_record: dict | None = None
-    ):
+    def __init__(self, id: int, source: str, value: float, source_record: dict | None = None):
         self.id = id
         self.source = source
         self.value = value
@@ -109,9 +107,7 @@ class FooSourceORM:
 
 
 class BarSourceORM:
-    def __init__(
-        self, id: UUID, source: str, label: str, source_record: dict | None = None
-    ):
+    def __init__(self, id: UUID, source: str, label: str, source_record: dict | None = None):
         self.id = id
         self.source = source
         self.label = label
