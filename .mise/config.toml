@@ -38,9 +38,20 @@ run = 'uv run python scripts/check_layout.py "{{ vars.package_root }}"'
 description = "Check formatting with ruff."
 run = "uv run ruff format --check"
 
+[tasks."lock:check"]
+description = "Check that uv.lock is up to date with pyproject.toml."
+run = "uv lock --check"
+
 [tasks.check]
-description = "Lint, check imports, layout and formatting, and typecheck."
-depends = ["lint", "lint:imports", "lint:structure", "format:check", "typecheck"]
+description = "Lint, check imports, layout, formatting and lockfile, and typecheck."
+depends = [
+  "lint",
+  "lint:imports",
+  "lint:structure",
+  "format:check",
+  "lock:check",
+  "typecheck",
+]
 
 [tasks.format]
 description = "Sort imports and run the ruff formatter."
