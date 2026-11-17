@@ -56,7 +56,7 @@ run = "uv version {{ usage.version }} --no-sync"
 [tasks."version:bump"]
 alias = "v:b"
 usage = '''
-arg "<parts>" var=#true { choices "major" "minor" "patch" "alpha" "beta" "rc" "dev" }
+arg "<parts>" var=#true { choices "major" "minor" "patch" "stable" "alpha" "beta" "rc" "dev" }
 '''
 run = 'uv version --bump {{ usage.parts | join(sep=" --bump ") }} --no-sync'
 
