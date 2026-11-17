@@ -6,7 +6,7 @@ uv = "latest"
 ast-grep = "0.51.1"
 
 [vars]
-package_name = "stitch-core"
+package_name = "rmi-stitch-core"
 package_root = "{{ config_root }}/src/stitch/core"
 
 # --------------------
@@ -43,7 +43,7 @@ description = "Check that uv.lock is up to date with pyproject.toml."
 run = "uv lock --check"
 
 [tasks.check]
-description = "Lint, check imports, layout, formatting and lockfile, and typecheck."
+description = "Lint, check imports, layout, formatting and lockfile, typecheck, and test."
 depends = [
   "lint",
   "lint:imports",
@@ -51,6 +51,7 @@ depends = [
   "format:check",
   "lock:check",
   "typecheck",
+  "test",
 ]
 
 [tasks.format]
@@ -71,7 +72,7 @@ run = "uv version {{ usage.version }} --no-sync"
 [tasks."version:bump"]
 alias = "v:b"
 usage = '''
-arg "<parts>" var=#true { choices "major" "minor" "patch" "alpha" "beta" "rc" "dev" }
+arg "<parts>" var=#true { choices "major" "minor" "patch" "stable" "alpha" "beta" "rc" "dev" }
 '''
 run = 'uv version --bump {{ usage.parts | join(sep=" --bump ") }} --no-sync'
 
@@ -94,7 +95,7 @@ git tag -a "v$version" -m "Release v$version"
 [tasks."release:prepare"]
 description = "Bump the version, commit it, and create a local tag."
 usage = '''
-arg "<parts>" var=#true { choices "major" "minor" "patch" "alpha" "beta" "rc" "dev" }
+arg "<parts>" var=#true { choices "major" "minor" "patch" "stable" "alpha" "beta" "rc" "dev" }
 '''
 run = [
   'test -z "$(git status --porcelain)"',
