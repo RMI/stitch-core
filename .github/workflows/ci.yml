@@ -18,6 +18,8 @@ jobs:
           - lint
           - "lint:imports"
           - "lint:structure"
+          - "format:check"
+          - "lock:check"
           - typecheck
           - test
     steps:
