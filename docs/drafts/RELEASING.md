@@ -1,7 +1,7 @@
 # Releasing Packages
 
 ## Overview <!-- section 1. -->
-Broadly speaking, `stitch-core` uses a tagged release process to publish the distribution to both PyPI and GitHub. We manually create tagged releases on GitHub; this triggers a workflow that publishes the release assets to PyPI.
+Broadly speaking, `stitch-core` uses a tagged release process to publish the distribution to both PyPI and GitHub. We manually create tagged releases on GitHub; this triggers a workflow that publishes the release assets to PyPI. This document outlines the rules and procedures around our release process and is intended to help mitigate erroneous releases and make the process reasonably straightforward for maintainers.
 
 ### Distinction between git tags and package version <!-- section 2. -->
 There's no strict connection (yet) between the package version defined in `pyproject.toml` and `git` artifacts like tags. When publishing/releasing a package git tags and the release version have 2 distinct roles.
@@ -15,14 +15,16 @@ These only come into play around creating the GitHub releases (the `sdist` and `
 Given the separation, responsibility is ultimately on the developers to ensure that git tags and package versions are aligned.
 
 ## Versioning <!-- section 3 -->
-- The **package version** is the source of truth!
-- Don't create version tags (`"vX.X.X"`) manually, use the scripts.
-- It's not strictly necessary to create tags whenever the **package version** is changed.
-- It is important to keep changes to the package version committed in isolated commits.
-- Rules permit developers to push `v*` tags
-- As of 2026-11-18, we recommend only bumping major, minor, patch, and the `dev` pre-release version segment
 
-Given the manual process, we're free to create releases whenever we desire. So we can develop and merge as normal until we choose to create a release. It's important to note that updating the **package version** leads to changes in `pyproject.toml` and `uv.lock` that need to be committed. It's recommended to create an isolated commit when bumping the **package version**
+The primary goal of our policy is to ensure that git version tags always align with a corresponding **package version**.
+
+- The **package version** is the source of truth! Tags are derived from the **package version**.
+- Don't create version tags (`"vX.X.X"`) manually, use the scripts.
+- Branch protection rules permit developers to push `v*` tags
+- It's not strictly necessary to create tags whenever the **package version** is changed.
+- As of 2026-11-18, we only use major, minor, patch, and the `dev` pre-release version segment
+
+Given the manual process, we're free to create releases whenever we desire. So we can develop and merge as normal until we choose to create a release. It's important to note that updating the **package version** leads to changes in `pyproject.toml` and `uv.lock` that need to be committed. It's recommended to create an isolated commit when bumping the **package version**.
 
 ## Releasing <!-- sections 5 and 6 -->
 
