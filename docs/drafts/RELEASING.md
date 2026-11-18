@@ -1,9 +1,9 @@
 # Releasing Packages
 
-## Overview %%1. purpose and scope%%
+## Overview <!-- section 1. -->
 Broadly speaking, `stitch-core` uses a tagged release process to publish the distribution to both PyPI and GitHub. We manually create tagged releases on GitHub; this triggers a workflow that publishes the release assets to PyPI.
 
-### Distinction between git tags and package version %%2. Package version vs git tag%%
+### Distinction between git tags and package version <!-- section 2. -->
 There's no strict connection (yet) between the package version defined in `pyproject.toml` and `git` artifacts like tags. When publishing/releasing a package git tags and the release version have 2 distinct roles.
 
 **package version**
@@ -14,7 +14,7 @@ These only come into play around creating the GitHub releases (the `sdist` and `
 
 Given the separation, responsibility is ultimately on the developers to ensure that git tags and package versions are aligned.
 
-## Versioning %%3. Versioning Policy%%
+## Versioning <!-- section 3 -->
 - The **package version** is the source of truth!
 - Don't create version tags (`"vX.X.X"`) manually, use the scripts.
 - It's not strictly necessary to create tags whenever the **package version** is changed.
@@ -24,11 +24,11 @@ Given the separation, responsibility is ultimately on the developers to ensure t
 
 Given the manual process, we're free to create releases whenever we desire. So we can develop and merge as normal until we choose to create a release. It's important to note that updating the **package version** leads to changes in `pyproject.toml` and `uv.lock` that need to be committed. It's recommended to create an isolated commit when bumping the **package version**
 
-## Releasing %%5. and 6.%%
+## Releasing <!-- sections 5 and 6 -->
 
 Our CI automatically publishes to PyPI when a release is created, so assume that the release process implicitly covers PyPI.
 
-### Release Scenarios
+### Release Scenarios <!-- section 5. -->
 There are 2 primary scenarios where you may want to create a release. Basically, its whether the current package version matches an existing tagged release or not.
 1. Features are merged in a branch (incl. `main`) and **package version** is unchanged
     - **package version** matches a release tag.
@@ -39,7 +39,7 @@ There are 2 primary scenarios where you may want to create a release. Basically,
     - no tagged release exists for the current package version
     - see [[#Create a release from existing version]]
 
-### Create a release from existing version
+### Create a release from existing version <!-- section 6.1 -->
 <!-- TODO: add script details -->
 - assumes no corresponding tag exists for the **package version**
     - e.g. latest tagged release is `v0.2.0` and current **package version** is `0.3.1`
@@ -52,7 +52,7 @@ There are 2 primary scenarios where you may want to create a release. Basically,
     - checkout `HEAD~3` first, confirm **package version** is `0.3.0`
     - run through the above steps to tag and release `v0.3.0`
 
-### Create a new release
+### Create a new release <!-- section 6.2 -->
 <!-- TODO: add script details for both -->
 
 #### Pre-releases
@@ -67,7 +67,7 @@ git commit --only -m "chore(release): v$(uv version --short)" -- pyproject.toml 
 
 # create and push the tag
 git tag -a "v1.3.0.dev1" -m "Release v1.3.0.dev1"  
-git push origin "refs/tags/$tag"
+git push origin "refs/tags/v1.3.0.dev1"
 
 # create the release
 
@@ -77,7 +77,7 @@ git push origin "refs/tags/$tag"
 <!-- covers stable to next stable and pre-release to stable -->
 - cut a new `release/` branch with the new version, create new tagged release after merge
 
-## Troubleshooting %%7. Recovery%%
+## Troubleshooting and Recovery <!-- section 7. -->
 - git tag and package version mismatch
 - releasing without a tag?
 - erroneous tag released (e.g. created a tagged release but the repo is faulty)
