@@ -31,7 +31,8 @@ Given the manual process, we're free to create releases whenever we desire. So w
 
 ## Releasing <!-- sections 5 and 6 -->
 
-Our CI automatically publishes to PyPI when a release is created, so assume that the release process implicitly covers PyPI.
+- Our CI automatically publishes to PyPI when a release is created, so assume that the release process implicitly covers PyPI.
+- All the `mise` tasks associated with versioning and releasing assume a clean working tree, so even untracked files will lead to an error.
 
 ### Release Scenarios <!-- section 5. -->
 There are 2 primary scenarios where you may want to create a release. Basically, its whether the current package version matches an existing tagged release or not.
@@ -75,15 +76,16 @@ mise run release:publish
 ### Create a new release <!-- section 6.2 -->
 
 #### Pre-releases
-These are more straightforward as the expectation is that they generally won't be fetched unless explicitly requested.
+These are more straightforward as the expectation is that they generally won't be fetched unless explicitly requested. Prereleases are typically pushed from feature branches, so it's not necessary to create a new branch solely to create a release—it can be done while work is ongoing.
 ```bash
 # checkout feature branch
 git checkout -b feat/new-feature
 
 # update the version
-# creates the next dev version 1.2.0 -> 1.3.0.dev1
-# - note that subsequent `dev` bumps should omit major|minor|patch: `mise run version:bump dev`
-mise run version:bump minor dev
+mise run version:bump minor dev # creates the next dev version 1.2.0 -> 1.3.0.dev1
+
+# ^^^^^ NOTE ^^^^^
+# Subsequent `dev` bumps should omit major|minor|patch: `mise run version:bump dev`
 
 # commit `pyproject.toml` and `uv.lock`
 mise run version:commit
@@ -106,18 +108,18 @@ mise run release:publish
 > [!NOTE] "Stable"
 > Stable releases are any version that only comprises the major, minor, and patch segments.
 
-When moving between stable releases (e.g. `0.2.1 -> 0.2.2`, `1.0.1 -> 1.2.0`)
+When moving between stable releases (e.g. `0.2.1 -> 0.2.2`, `1.0.1 -> 1.1.0`)
 ```bash
 # create new branch with the target release
 # current version is 1.0.1
-git checkout -b release/1.2.0
+git checkout -b release/1.1.0
 
-mise run version:bump minor # bump to 1.2.0
+mise run version:bump minor # bump to 1.1.0
 mise run version:commit
 
-git push --set-upstream origin release/1.2.0
+git push --set-upstream origin release/1.1.0
 
-# create PR for release/1.2.0 -> main
+# create PR for release/1.1.0 -> main
 
 # after PR merged
 git checkout main
