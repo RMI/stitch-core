@@ -4,19 +4,22 @@
 Broadly speaking, `stitch-core` uses a tagged release process to publish the distribution to both PyPI and GitHub. We manually create tagged releases on GitHub; this triggers a workflow that publishes the release assets to PyPI. This document outlines the rules and procedures around our release process and is intended to help mitigate erroneous releases and make the process reasonably straightforward for maintainers.
 
 ### Distinction between git tags and package version <!-- section 2. -->
-There's no strict connection (yet) between the package version defined in `pyproject.toml` and `git` artifacts like tags. When publishing/releasing a package git tags and the release version have 2 distinct roles.
+There's no strict connection between the package version defined in `pyproject.toml` and `git` artifacts like tags. When publishing/releasing a package git tags and the **package version** have 2 distinct roles.
 
 **package version**
-This is the value under `project.version` in `pyproject.toml`. It's what dependency managers like `uv`, `poetry`, `pdm`, and `pip` use to actually resolve versions to satisfy the project configuration. So, when another application adds `rmi-stitch-core` as a dependency like `"rmi-stitch-core>=0.2.0,<0.3.0"`, that will only look in the configured index (PyPI by default) for the latest version that satisfies the constraints.
+This is the value under `project.version` in `pyproject.toml`. It's what dependency managers like `uv`, `poetry`, `pdm`, and `pip` use to actually resolve versions to satisfy the project configuration. So, when another application adds `rmi-stitch-core` as a dependency like `"rmi-stitch-core>=0.2.0,<0.3.0"`, existing packaging tools search the configured index (PyPI by default) for the latest **package version** that satisfies the constraints.
 
 **git tags**
-These only come into play around creating the GitHub releases (the `sdist` and `whl` files that are uploaded to GitHub). As of 2026-11-18, `uv` does not support dynamic versioning—where the **package version** is derived from VCS. There's nothing stopping us from calling `uv version 5.2.1 && git tag -am "release: 2.1.0" v3.2.1` and creating a GitHub release. Our tagged release on GitHub would be at `v3.2.1` that publishes `rmi-stitch-core@5.2.1`.
-
-Given the separation, responsibility is ultimately on the developers to ensure that git tags and package versions are aligned.
+Git tags serve 2 purposes when releasing: targets for creating GitHub releases and for selecting the commit when publishing to PyPI. As of 2026-11-18, `uv` does not support dynamic versioning—where the **package version** is derived from VCS. There's nothing stopping us from calling `uv version 5.2.1 && git tag -am "release: 2.1.0" v3.2.1` and creating a GitHub release. Our tagged release on GitHub would be at `v3.2.1` that publishes `rmi-stitch-core@5.2.1`.
 
 ## Versioning <!-- section 3 -->
 
-The primary goal of our policy is to ensure that git version tags always align with a corresponding **package version**.
+Our main goal is to ensure that git version tags always align with a corresponding **package version**.
+- Tag names match the **project version**: `"v<project version>`.
+- Tags point to commits where `pyproject.toml` contains that version.
+
+> [!IMPORTANT] Developer Responsibility
+> Given the separation described above, responsibility is ultimately on the developers to ensure that git tags and package versions are aligned.
 
 - The **package version** is the source of truth! Tags are derived from the **package version**.
 - Don't create version tags (`"vX.X.X"`) manually, use the scripts.
