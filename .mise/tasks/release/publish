@@ -6,7 +6,13 @@ test -z "$(git status --porcelain)"
 tag="v$(uv version --short)"
 test "$(git rev-parse "$tag^{commit}")" = "$(git rev-parse HEAD)"
 
+# PEP 440 pre-release (a, b, rc) or dev release, optionally after a .postN segment.
+prerelease_re='^[0-9]+(\.[0-9]+)*(\.post[0-9]+)?((a|b|rc)[0-9]+|\.dev[0-9]+)'
+flags=(--verify-tag --generate-notes)
+if [[ "${tag#v}" =~ $prerelease_re ]]; then
+  flags+=(--prerelease)
+fi
+
 uv build --all-packages --clear
 git push origin "refs/tags/$tag"
-gh release create "$tag" dist/*.whl dist/*.tar.gz \
-  --verify-tag --generate-notes
+gh release create "$tag" dist/*.whl dist/*.tar.gz "${flags[@]}"
