@@ -3,13 +3,25 @@ on:
   push:
     branches: [main]
   pull_request:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+env:
+  UV_LOCKED: "1"
 jobs:
   check:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        task: [lint, typecheck, test]
+        task:
+          - lint
+          - "lint:imports"
+          - "lint:structure"
+          - "format:check"
+          - "lock:check"
+          - typecheck
+          - test
     steps:
       - uses: actions/checkout@v7
       - uses: jdx/mise-action@v5
