@@ -1,9 +1,9 @@
 # Releasing Packages
 
-## Overview <!-- section 1. -->
+## Overview
 Broadly speaking, `stitch-core` uses a tagged release process to publish the distribution to both PyPI and GitHub. We manually create tagged releases on GitHub; this triggers a workflow that publishes the release assets to PyPI. This document outlines the rules and procedures around our release process and is intended to help mitigate erroneous releases and make the process reasonably straightforward for maintainers.
 
-### Distinction between git tags and package version <!-- section 2. -->
+### Distinction between git tags and package version
 There's no strict connection between the package version defined in `pyproject.toml` and `git` artifacts like tags. When publishing/releasing a package git tags and the **package version** have 2 distinct roles.
 
 **package version**
@@ -12,7 +12,7 @@ This is the value under `project.version` in `pyproject.toml`. It's what depende
 **git tags**
 Git tags serve 2 purposes when releasing: targets for creating GitHub releases and for selecting the commit when publishing to PyPI. As of 2026-11-18, `uv` does not support dynamic versioning—where the **package version** is derived from VCS. There's nothing stopping us from calling `uv version 5.2.1 && git tag -am "release: 2.1.0" v3.2.1` and creating a GitHub release. Our tagged release on GitHub would be at `v3.2.1` that publishes `rmi-stitch-core@5.2.1`.
 
-## Versioning <!-- section 3 -->
+## Versioning
 
 Our main goal is to ensure that git version tags always align with a corresponding **package version**.
 - Tag names match the **project version**: `"v<project version>`.
@@ -29,12 +29,12 @@ Our main goal is to ensure that git version tags always align with a correspondi
 
 Given the manual process, we're free to create releases whenever we desire. So we can develop and merge as normal until we choose to create a release. It's important to note that updating the **package version** leads to changes in `pyproject.toml` and `uv.lock` that need to be committed. It's recommended to create an isolated commit when bumping the **package version**.
 
-## Releasing <!-- sections 5 and 6 -->
+## Releasing
 
 - Our CI automatically publishes to PyPI when a release is created, so assume that the release process implicitly covers PyPI.
 - All the `mise` tasks associated with versioning and releasing assume a clean working tree, so even untracked files will lead to an error.
 
-### Release Scenarios <!-- section 5. -->
+### Release Scenarios
 There are 2 primary scenarios where you may want to create a release. Basically, its whether the current package version matches an existing tagged release or not.
 1. Features are merged in a branch (incl. `main`) and **package version** is unchanged
     - **package version** matches a release tag.
@@ -45,7 +45,7 @@ There are 2 primary scenarios where you may want to create a release. Basically,
     - no tagged release exists for the current package version
     - see [[#Create a release from existing version]]
 
-### Create a release from existing version <!-- section 6.1 -->
+### Create a release from existing version
 This option assumes that no corresponding tag exists for the **package version**—e.g. latest tagged release is `v0.2.0` and current **package version** is `0.3.1`.
 ```bash
 # checkout main branch
@@ -73,7 +73,7 @@ mise run release:publish
 >  mise run release:publish
 > ```
 
-### Create a new release <!-- section 6.2 -->
+### Create a new release
 
 #### Pre-releases
 These are more straightforward as the expectation is that they generally won't be fetched unless explicitly requested. Prereleases are typically pushed from feature branches, so it's not necessary to create a new branch solely to create a release—it can be done while work is ongoing.
@@ -139,9 +139,9 @@ mise run version:commit
 # remaining steps same as above 
 ```
 
-## Troubleshooting and Recovery <!-- section 7. -->
+## Troubleshooting and Recovery
 > TBD
-<!-- Working Notes
+<!-- working notes 2026-11-18
 - git tag and package version mismatch
 - releasing without a tag?
 - erroneous tag released (e.g. created a tagged release but the repo is faulty)
