@@ -22,8 +22,6 @@ Our main goal is to ensure that git version tags always align with a correspondi
 - Tags point to commits where `pyproject.toml` contains that version.
 
 > [!IMPORTANT]
-> **Developer Responsibility**
->
 > Given the separation described above, responsibility is ultimately on the developers to ensure that git tags and package versions are aligned.
 
 - The **package version** is the source of truth! Tags are derived from the **package version**.
@@ -69,8 +67,6 @@ mise run release:publish
 ```
 
 > [!NOTE]
-> **Using a different branch or commit**
->
 > This process can also be run from a different branch or specific commit hash. So given
 >
 > - latest tag is at `v0.2.0`
@@ -123,9 +119,7 @@ mise run release:publish
 #### Stable Releases
 
 > [!NOTE]
-> **"Stable"**
->
-> Stable releases are any version that only comprises the major, minor, and patch segments.
+> "Stable" here refers to version numbers that only comprises the major, minor, and patch segments.
 
 When moving between stable releases (e.g. `0.2.1 -> 0.2.2`, `1.0.1 -> 1.1.0`)
 
