@@ -25,7 +25,7 @@ Our main goal is to ensure that git version tags always align with a correspondi
 - Don't create version tags (`"vX.X.X"`) manually, use the scripts.
 - Branch protection rules permit developers to push `v*` tags
 - It's not strictly necessary to create tags whenever the **package version** is changed.
-- As of 2026-11-18, we only use major, minor, patch, and the `dev` pre-release version segment
+- As of 2026-11-18, we only use major, minor, patch, and the `dev` pre-release version segment. We use `stable` as a convenience supported by `uv version` (see [[#Stable Releases]])
 
 Given the manual process, we're free to create releases whenever we desire. So we can develop and merge as normal until we choose to create a release. It's important to note that updating the **package version** leads to changes in `pyproject.toml` and `uv.lock` that need to be committed. It's recommended to create an isolated commit when bumping the **package version**.
 
@@ -49,6 +49,7 @@ This option assumes that no corresponding tag exists for the **package version**
 ```bash
 # checkout main branch
 git checkout main 
+git pull
 
 # create new tag from `pyproject.toml` version
 mise run git:tag
@@ -61,11 +62,11 @@ mise run release:publish
 > This process can also be run from a different branch or specific commit hash. So given
 > - latest tag is at `v0.2.0`
 > - current **package version** is `0.3.1`
-> - the **package version** was bumped to `0.3.1` in `HEAD~2`
+> - the **package version** was bumped from `0.3.0` to `0.3.1` in `HEAD~2`
 > 
 > You can run
 > ```bash
-> # from main
+> # from up-to-date main
 >  git checkout HEAD~3
 >  mise run git:tag
 >  mise run release:publish
@@ -80,7 +81,9 @@ These are more straightforward as the expectation is that they generally won't b
 git checkout -b feat/new-feature
 
 # update the version
-mise run version:bump minor dev # creates the next dev version 1.2.0 -> 1.3.0.dev1
+# creates the next dev version 1.2.0 -> 1.3.0.dev1
+# - note that subsequent `dev` bumps should omit major|minor|patch: `mise run version:bump dev`
+mise run version:bump minor dev
 
 # commit `pyproject.toml` and `uv.lock`
 mise run version:commit
@@ -112,7 +115,7 @@ git checkout -b release/1.2.0
 mise run version:bump minor # bump to 1.2.0
 mise run version:commit
 
-git push
+git push --set-upstream origin release/1.2.0
 
 # create PR for release/1.2.0 -> main
 
@@ -126,7 +129,7 @@ mise run release:publish
 When moving from pre-release to stable (e.g. `0.2.0.dev6 -> 0.2.0`). 
 ```bash
 # curent version is at 0.2.0.dev6
-git checkout -b release/0.2.0 
+git checkout -b release/0.2.0  # or remain on existing feature branch
 
 mise run version:bump stable # `uv version` convenience
 mise run version:commit
