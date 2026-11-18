@@ -47,13 +47,11 @@ These are the common situations where a developer may want to publish a release.
 - working on a new feature -> create pre-releases
 - features are merged and **package version** is unchanged
     - work has been happening but there's an existing tagged release that matches the current package version
-    - either delete existing releases and update the tag
-    - or cut a new `release/` branch with the new version, create new tagged release after merge
-        - we allow tag pushes to `main`, but not other changes
+    - if the release is erroneous, see [[#Troubleshooting 7. Recovery]]
+    - otherwise see [[#Create a new release]]
 - features are merged and **package version** is changed
     - no tagged release exists for the current package version
-    - create and push the tag from the version
-    - create the release from the tag
+    - see [[#Create a release from existing version]]
 
 ### General Outline
 - commit changes & ensure git is clean
@@ -95,6 +93,10 @@ git push origin "refs/tags/$tag"
 This applies to situations where the **package version** hasn't been updated.
 - pre-release -> stable
 - stable with existing tagged release -> new stable
+
+#### Stable Releases
+- cut a new `release/` branch with the new version, create new tagged release after merge
+    - we allow tag pushes to `main`, but not other changes
 
 ## Troubleshooting %%7. Recovery%%
 - git tag and package version mismatch
