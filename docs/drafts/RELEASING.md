@@ -45,44 +45,98 @@ There are 2 primary scenarios where you may want to create a release. Basically,
     - see [[#Create a release from existing version]]
 
 ### Create a release from existing version <!-- section 6.1 -->
-<!-- TODO: add script details -->
-- assumes no corresponding tag exists for the **package version**
-    - e.g. latest tagged release is `v0.2.0` and current **package version** is `0.3.1`
-- checkout `main`
-- create the tag `v0.3.1`
-- push the tag
-- create a GitHub release from the tag
-- This process can also be run from a specific commit hash. So if latest tag is at `v0.2.0` and current **package version** is `0.3.1`
-    - let's say the **package version** was bumped to 0.3.1 in `HEAD~2`
-    - checkout `HEAD~3` first, confirm **package version** is `0.3.0`
-    - run through the above steps to tag and release `v0.3.0`
+This option assumes that no corresponding tag exists for the **package version**—e.g. latest tagged release is `v0.2.0` and current **package version** is `0.3.1`.
+```bash
+# checkout main branch
+git checkout main 
+
+# create new tag from `pyproject.toml` version
+mise run git:tag
+
+# push the tag, build, and create a release
+mise run release:publish
+```
+
+> [!NOTE] Using a different branch or commit
+> This process can also be run from a different branch or specific commit hash. So given
+> - latest tag is at `v0.2.0`
+> - current **package version** is `0.3.1`
+> - the **package version** was bumped to `0.3.1` in `HEAD~2`
+> 
+> You can run
+> ```bash
+> # from main
+>  git checkout HEAD~3
+>  mise run git:tag
+>  mise run release:publish
+> ```
 
 ### Create a new release <!-- section 6.2 -->
-<!-- TODO: add script details for both -->
 
 #### Pre-releases
-<!-- covers stable -> pre-release for next stable -->
 These are more straightforward as the expectation is that they generally won't be fetched unless explicitly requested.
 ```bash
-# update the package version
-uv version --bump minor --bump dev # creates the next dev version 1.2.0 -> 1.3.0.dev1
+# checkout feature branch
+git checkout -b feat/new-feature
+
+# update the version
+mise run version:bump minor dev # creates the next dev version 1.2.0 -> 1.3.0.dev1
 
 # commit `pyproject.toml` and `uv.lock`
-git commit --only -m "chore(release): v$(uv version --short)" -- pyproject.toml uv.lock
+mise run version:commit
 
-# create and push the tag
-git tag -a "v1.3.0.dev1" -m "Release v1.3.0.dev1"  
-git push origin "refs/tags/v1.3.0.dev1"
+# create the tag
+mise run git:tag
 
 # create the release
-
+mise run release:publish
+```
+A shorter option which does the same thing:
+```bash
+git checkout -b feat/new-feature
+mise run release:prepare minor dev # bump, commit, & tag
+mise run release:publish
 ```
 
 #### Stable Releases
-<!-- covers stable to next stable and pre-release to stable -->
-- cut a new `release/` branch with the new version, create new tagged release after merge
+
+> [!NOTE] "Stable"
+> Stable releases are any version that only comprises the major, minor, and patch segments.
+
+When moving between stable releases (e.g. `0.2.1 -> 0.2.2`, `1.0.1 -> 1.2.0`)
+```bash
+# create new branch with the target release
+# current version is 1.0.1
+git checkout -b release/1.2.0
+
+mise run version:bump minor # bump to 1.2.0
+mise run version:commit
+
+git push
+
+# create PR for release/1.2.0 -> main
+
+# after PR merged
+git checkout main
+git pull
+mise run git:tag
+mise run release:publish
+```
+
+When moving from pre-release to stable (e.g. `0.2.0.dev6 -> 0.2.0`). 
+```bash
+# curent version is at 0.2.0.dev6
+git checkout -b release/0.2.0 
+
+mise run version:bump stable # `uv version` convenience
+mise run version:commit
+
+# remaining steps same as above 
+```
 
 ## Troubleshooting and Recovery <!-- section 7. -->
+> TBD
+<!-- Working Notes
 - git tag and package version mismatch
 - releasing without a tag?
 - erroneous tag released (e.g. created a tagged release but the repo is faulty)
@@ -90,3 +144,4 @@ git push origin "refs/tags/v1.3.0.dev1"
     - delete from PyPI: login, navigate to project > releases, select "delete" in Options dropdown
     - delete from GitHub
 - How to reset a tag
+-->
