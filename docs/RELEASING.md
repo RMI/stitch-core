@@ -1,9 +1,11 @@
 # Releasing Packages
 
 ## Overview
+
 Broadly speaking, `stitch-core` uses a tagged release process to publish the distribution to both PyPI and GitHub. We manually create tagged releases on GitHub; this triggers a workflow that publishes the release assets to PyPI. This document outlines the rules and procedures around our release process and is intended to help mitigate erroneous releases and make the process reasonably straightforward for maintainers.
 
 ### Distinction between git tags and package version
+
 There's no strict connection between the package version defined in `pyproject.toml` and `git` artifacts like tags. When publishing/releasing a package git tags and the **package version** have 2 distinct roles.
 
 **package version**
@@ -15,10 +17,13 @@ Git tags serve 2 purposes when releasing: targets for creating GitHub releases a
 ## Versioning
 
 Our main goal is to ensure that git version tags always align with a corresponding **package version**.
+
 - Tag names match the **project version**: `"v<project version>`.
 - Tags point to commits where `pyproject.toml` contains that version.
 
-> [!IMPORTANT] Developer Responsibility
+> [!IMPORTANT]
+> **Developer Responsibility**
+>
 > Given the separation described above, responsibility is ultimately on the developers to ensure that git tags and package versions are aligned.
 
 - The **package version** is the source of truth! Tags are derived from the **package version**.
@@ -35,21 +40,25 @@ Given the manual process, we're free to create releases whenever we desire. So w
 - All the `mise` tasks associated with versioning and releasing assume a clean working tree, so even untracked files will lead to an error.
 
 ### Release Scenarios
+
 There are 2 primary scenarios where you may want to create a release. Basically, its whether the current package version matches an existing tagged release or not.
+
 1. Features are merged in a branch (incl. `main`) and **package version** is unchanged
-    - **package version** matches a release tag.
-    - if the release is erroneous and should be replaced/overridden, see [[#Troubleshooting 7. Recovery]]
-    - otherwise see [[#Create a new release]]
+   - **package version** matches a release tag.
+   - if the release is erroneous and should be replaced/overridden, see [[#Troubleshooting 7. Recovery]]
+   - otherwise see [[#Create a new release]]
 2. Features are merged in a branch and **package version** is changed
-    - **package version** does not match a release tag.
-    - no tagged release exists for the current package version
-    - see [[#Create a release from existing version]]
+   - **package version** does not match a release tag.
+   - no tagged release exists for the current package version
+   - see [[#Create a release from existing version]]
 
 ### Create a release from existing version
+
 This option assumes that no corresponding tag exists for the **package version**—e.g. latest tagged release is `v0.2.0` and current **package version** is `0.3.1`.
+
 ```bash
 # checkout main branch
-git checkout main 
+git checkout main
 git pull
 
 # create new tag from `pyproject.toml` version
@@ -59,13 +68,17 @@ mise run git:tag
 mise run release:publish
 ```
 
-> [!NOTE] Using a different branch or commit
+> [!NOTE]
+> **Using a different branch or commit**
+>
 > This process can also be run from a different branch or specific commit hash. So given
+>
 > - latest tag is at `v0.2.0`
 > - current **package version** is `0.3.1`
 > - the **package version** was bumped from `0.3.0` to `0.3.1` in `HEAD~2`
-> 
+>
 > You can run
+>
 > ```bash
 > # from up-to-date main
 >  git checkout HEAD~3
@@ -76,7 +89,9 @@ mise run release:publish
 ### Create a new release
 
 #### Pre-releases
+
 These are more straightforward as the expectation is that they generally won't be fetched unless explicitly requested. Prereleases are typically pushed from feature branches, so it's not necessary to create a new branch solely to create a release—it can be done while work is ongoing.
+
 ```bash
 # checkout feature branch
 git checkout -b feat/new-feature
@@ -96,7 +111,9 @@ mise run git:tag
 # create the release
 mise run release:publish
 ```
+
 A shorter option which does the same thing:
+
 ```bash
 git checkout -b feat/new-feature
 mise run release:prepare minor dev # bump, commit, & tag
@@ -105,10 +122,13 @@ mise run release:publish
 
 #### Stable Releases
 
-> [!NOTE] "Stable"
+> [!NOTE]
+> **"Stable"**
+>
 > Stable releases are any version that only comprises the major, minor, and patch segments.
 
 When moving between stable releases (e.g. `0.2.1 -> 0.2.2`, `1.0.1 -> 1.1.0`)
+
 ```bash
 # create new branch with the target release
 # current version is 1.0.1
@@ -128,7 +148,8 @@ mise run git:tag
 mise run release:publish
 ```
 
-When moving from pre-release to stable (e.g. `0.2.0.dev6 -> 0.2.0`). 
+When moving from pre-release to stable (e.g. `0.2.0.dev6 -> 0.2.0`).
+
 ```bash
 # curent version is at 0.2.0.dev6
 git checkout -b release/0.2.0  # or remain on existing feature branch
@@ -136,11 +157,13 @@ git checkout -b release/0.2.0  # or remain on existing feature branch
 mise run version:bump stable # `uv version` convenience
 mise run version:commit
 
-# remaining steps same as above 
+# remaining steps same as above
 ```
 
 ## Troubleshooting and Recovery
+
 > TBD
+
 <!-- working notes 2026-11-18
 - git tag and package version mismatch
 - releasing without a tag?
