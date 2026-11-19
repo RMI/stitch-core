@@ -6,14 +6,14 @@ the relevant layers. httpx instrumentation is what propagates the W3C
 ``traceparent`` so a service's downstream calls join the same trace end-to-end.
 """
 
-from .logging_config import (
+from stitch.core._internal.observability.logging_config import (
     JsonFormatter,
     ResourceAttributesFilter,
     configure_logging,
     resource_attributes_from_env,
 )
-from .settings import OTelSettings
-from .tracing import (
+from stitch.core._internal.observability.settings import OTelSettings
+from stitch.core._internal.observability.tracing import (
     LoggingSpanExporter,
     configure_tracing,
     instrument_fastapi,
