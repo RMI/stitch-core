@@ -13,12 +13,11 @@ overrides the ``on_request_start`` / ``request_log_fields`` / ``on_request_finis
 hooks rather than reimplementing the request-id / span / logging plumbing.
 """
 
+import logging
 from contextvars import ContextVar
 from time import perf_counter
 from typing import TYPE_CHECKING
 from uuid import uuid4
-
-import logging
 
 from opentelemetry import trace
 

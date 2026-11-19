@@ -9,14 +9,14 @@ from opentelemetry.sdk.trace.export.in_memory_span_exporter import (
     InMemorySpanExporter,
 )
 
+from stitch.core._internal.observability import tracing as pkg_tracing
 from stitch.core.observability import (
+    LoggingSpanExporter,
     OTelSettings,
     configure_tracing,
     setup_fastapi_tracing,
     setup_sqlalchemy_tracing,
 )
-from stitch.core._internal.observability import tracing as pkg_tracing
-from stitch.core.observability import LoggingSpanExporter
 
 
 def test_configure_tracing_disabled_returns_none() -> None:
@@ -79,9 +79,7 @@ def test_configure_tracing_merges_extra_resource_attributes(monkeypatch) -> None
 
 def test_setup_fastapi_tracing_disabled_skips_instrumentation(monkeypatch) -> None:
     calls: list[str] = []
-    monkeypatch.setattr(
-        pkg_tracing, "instrument_fastapi", lambda _app: calls.append("fastapi")
-    )
+    monkeypatch.setattr(pkg_tracing, "instrument_fastapi", lambda _app: calls.append("fastapi"))
     monkeypatch.setattr(pkg_tracing, "instrument_httpx", lambda: calls.append("httpx"))
     provider = setup_fastapi_tracing(
         object(),
@@ -95,9 +93,7 @@ def test_setup_fastapi_tracing_disabled_skips_instrumentation(monkeypatch) -> No
 def test_setup_fastapi_tracing_instruments_app_and_httpx(monkeypatch) -> None:
     calls: list[str] = []
     monkeypatch.setattr(pkg_tracing.trace, "set_tracer_provider", lambda _p: None)
-    monkeypatch.setattr(
-        pkg_tracing, "instrument_fastapi", lambda _app: calls.append("fastapi")
-    )
+    monkeypatch.setattr(pkg_tracing, "instrument_fastapi", lambda _app: calls.append("fastapi"))
     monkeypatch.setattr(pkg_tracing, "instrument_httpx", lambda: calls.append("httpx"))
     provider = setup_fastapi_tracing(
         object(),
@@ -111,9 +107,7 @@ def test_setup_fastapi_tracing_instruments_app_and_httpx(monkeypatch) -> None:
 def test_setup_fastapi_tracing_can_skip_outbound_httpx(monkeypatch) -> None:
     calls: list[str] = []
     monkeypatch.setattr(pkg_tracing.trace, "set_tracer_provider", lambda _p: None)
-    monkeypatch.setattr(
-        pkg_tracing, "instrument_fastapi", lambda _app: calls.append("fastapi")
-    )
+    monkeypatch.setattr(pkg_tracing, "instrument_fastapi", lambda _app: calls.append("fastapi"))
     monkeypatch.setattr(pkg_tracing, "instrument_httpx", lambda: calls.append("httpx"))
     setup_fastapi_tracing(
         object(),
@@ -128,15 +122,10 @@ def test_setup_sqlalchemy_tracing_noop_when_disabled(monkeypatch) -> None:
     calls: list[object] = []
     monkeypatch.setattr(pkg_tracing, "instrument_sqlalchemy", lambda e: calls.append(e))
     assert (
-        setup_sqlalchemy_tracing(
-            object(), settings=OTelSettings(otel_traces_exporter="none")
-        )
+        setup_sqlalchemy_tracing(object(), settings=OTelSettings(otel_traces_exporter="none"))
         is False
     )
-    assert (
-        setup_sqlalchemy_tracing(object(), settings=OTelSettings(otel_enabled=False))
-        is False
-    )
+    assert setup_sqlalchemy_tracing(object(), settings=OTelSettings(otel_enabled=False)) is False
     assert calls == []
 
 
@@ -145,9 +134,7 @@ def test_setup_sqlalchemy_tracing_instruments_when_enabled(monkeypatch) -> None:
     monkeypatch.setattr(pkg_tracing, "instrument_sqlalchemy", lambda e: calls.append(e))
     engine = object()
     assert (
-        setup_sqlalchemy_tracing(
-            engine, settings=OTelSettings(otel_traces_exporter="console")
-        )
+        setup_sqlalchemy_tracing(engine, settings=OTelSettings(otel_traces_exporter="console"))
         is True
     )
     assert calls == [engine]
@@ -206,9 +193,9 @@ def test_logging_span_exporter_truncates_sequence_attributes(caplog) -> None:
             span.set_attribute("tags", (long_value, "short"))
             span.set_attribute("many", tuple(str(i) for i in range(150)))
 
-    attrs = [r for r in caplog.records if r.name == "stitch.core.observability.trace"][
-        0
-    ].event["attributes"]
+    attrs = [r for r in caplog.records if r.name == "stitch.core.observability.trace"][0].event[
+        "attributes"
+    ]
     tags = attrs["tags"]
     assert tags[0].endswith("…") and len(tags[0]) == 2000 + 1
     assert tags[1] == "short"

@@ -164,9 +164,7 @@ def configure_tracing(
     so this protects direct callers that bypass it.
     """
     if exporter not in _VALID_EXPORTERS:
-        raise ValueError(
-            f"exporter must be one of {_VALID_EXPORTERS}, got {exporter!r}"
-        )
+        raise ValueError(f"exporter must be one of {_VALID_EXPORTERS}, got {exporter!r}")
     if not 0.0 <= sample_ratio <= 1.0:
         raise ValueError(f"sample_ratio must be in [0.0, 1.0], got {sample_ratio!r}")
     if not enabled or exporter == "none":
@@ -192,9 +190,7 @@ def configure_tracing(
     if exporter == "otlp":
         # endpoint=None lets the exporter fall back to OTEL_EXPORTER_OTLP_ENDPOINT
         # / the localhost default.
-        provider.add_span_processor(
-            BatchSpanProcessor(OTLPSpanExporter(endpoint=otlp_endpoint))
-        )
+        provider.add_span_processor(BatchSpanProcessor(OTLPSpanExporter(endpoint=otlp_endpoint)))
     else:  # "console" (validated above) — log spans to stdout, no sidecar.
         # SimpleSpanProcessor exports each span synchronously on the request
         # thread. Kept for immediate dev visibility (the otlp/cloud path already
