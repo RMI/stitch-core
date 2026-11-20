@@ -110,6 +110,8 @@ class LoggingSpanExporter(SpanExporter):
     def export(self, spans: "Sequence[ReadableSpan]") -> SpanExportResult:
         for span in spans:
             ctx = span.get_span_context()
+            if ctx is None:
+                continue
             parent = span.parent
             duration_ms = (
                 round((span.end_time - span.start_time) / 1e6, 2)

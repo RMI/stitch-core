@@ -28,7 +28,7 @@ def test_configure_tracing_rejects_unknown_exporter() -> None:
     # A direct caller that bypasses OTelSettings gets a fail-fast error rather
     # than silently falling through to the console exporter.
     with pytest.raises(ValueError, match="exporter must be one of"):
-        configure_tracing(service_name="svc", exporter="consle")
+        configure_tracing(service_name="svc", exporter="consle")  # ty: ignore[invalid-argument-type]
 
 
 def test_configure_tracing_rejects_out_of_range_sample_ratio() -> None:
@@ -61,6 +61,7 @@ def test_configure_tracing_omits_missing_keys_so_env_wins(monkeypatch) -> None:
     monkeypatch.setenv("OTEL_RESOURCE_ATTRIBUTES", "deployment.name=pr-7")
     monkeypatch.setattr(trace, "set_tracer_provider", lambda _provider: None)
     provider = configure_tracing(service_name="svc", exporter="console")
+    assert isinstance(provider, TracerProvider)
     attrs = provider.resource.attributes
     assert attrs["service.name"] == "svc"
     assert attrs["deployment.name"] == "pr-7"
@@ -74,6 +75,7 @@ def test_configure_tracing_merges_extra_resource_attributes(monkeypatch) -> None
         exporter="console",
         extra_resource_attributes={"deployment.lane": "development"},
     )
+    assert isinstance(provider, TracerProvider)
     assert provider.resource.attributes["deployment.lane"] == "development"
 
 
@@ -82,7 +84,7 @@ def test_setup_fastapi_tracing_disabled_skips_instrumentation(monkeypatch) -> No
     monkeypatch.setattr(pkg_tracing, "instrument_fastapi", lambda _app: calls.append("fastapi"))
     monkeypatch.setattr(pkg_tracing, "instrument_httpx", lambda: calls.append("httpx"))
     provider = setup_fastapi_tracing(
-        object(),
+        object(),  # ty: ignore[invalid-argument-type]
         service_name="svc",
         settings=OTelSettings(otel_traces_exporter="none"),
     )
@@ -96,7 +98,7 @@ def test_setup_fastapi_tracing_instruments_app_and_httpx(monkeypatch) -> None:
     monkeypatch.setattr(pkg_tracing, "instrument_fastapi", lambda _app: calls.append("fastapi"))
     monkeypatch.setattr(pkg_tracing, "instrument_httpx", lambda: calls.append("httpx"))
     provider = setup_fastapi_tracing(
-        object(),
+        object(),  # ty: ignore[invalid-argument-type]
         service_name="svc",
         settings=OTelSettings(otel_traces_exporter="console"),
     )
@@ -110,7 +112,7 @@ def test_setup_fastapi_tracing_can_skip_outbound_httpx(monkeypatch) -> None:
     monkeypatch.setattr(pkg_tracing, "instrument_fastapi", lambda _app: calls.append("fastapi"))
     monkeypatch.setattr(pkg_tracing, "instrument_httpx", lambda: calls.append("httpx"))
     setup_fastapi_tracing(
-        object(),
+        object(),  # ty: ignore[invalid-argument-type]
         service_name="svc",
         settings=OTelSettings(otel_traces_exporter="console"),
         instrument_outbound_httpx=False,
@@ -122,10 +124,10 @@ def test_setup_sqlalchemy_tracing_noop_when_disabled(monkeypatch) -> None:
     calls: list[object] = []
     monkeypatch.setattr(pkg_tracing, "instrument_sqlalchemy", lambda e: calls.append(e))
     assert (
-        setup_sqlalchemy_tracing(object(), settings=OTelSettings(otel_traces_exporter="none"))
+        setup_sqlalchemy_tracing(object(), settings=OTelSettings(otel_traces_exporter="none"))  # ty: ignore[invalid-argument-type]
         is False
     )
-    assert setup_sqlalchemy_tracing(object(), settings=OTelSettings(otel_enabled=False)) is False
+    assert setup_sqlalchemy_tracing(object(), settings=OTelSettings(otel_enabled=False)) is False  # ty: ignore[invalid-argument-type]
     assert calls == []
 
 
@@ -134,7 +136,7 @@ def test_setup_sqlalchemy_tracing_instruments_when_enabled(monkeypatch) -> None:
     monkeypatch.setattr(pkg_tracing, "instrument_sqlalchemy", lambda e: calls.append(e))
     engine = object()
     assert (
-        setup_sqlalchemy_tracing(engine, settings=OTelSettings(otel_traces_exporter="console"))
+        setup_sqlalchemy_tracing(engine, settings=OTelSettings(otel_traces_exporter="console"))  # ty: ignore[invalid-argument-type]
         is True
     )
     assert calls == [engine]
