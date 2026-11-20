@@ -221,7 +221,7 @@ def instrument_fastapi(app: "FastAPI") -> None:
     egress (an ``attributes``/``redaction`` processor) rather than blinding local
     dev.
     """
-    from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+    from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor  # noqa: PLC0415
 
     FastAPIInstrumentor.instrument_app(app)
 
@@ -234,7 +234,7 @@ def instrument_httpx() -> None:
     Imported lazily so the instrumentor's optional ``httpx`` dependency is only
     required by services that actually call this.
     """
-    from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
+    from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor  # noqa: PLC0415
 
     HTTPXClientInstrumentor().instrument()
 
@@ -246,7 +246,7 @@ def instrument_sqlalchemy(engine: "Engine") -> None:
     services without SQLAlchemy (the instrumentor lists it as an optional
     "instruments" dependency) don't need it installed to use this package.
     """
-    from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
+    from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor  # noqa: PLC0415
 
     SQLAlchemyInstrumentor().instrument(engine=engine)
 

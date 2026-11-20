@@ -1,4 +1,4 @@
-"""Per-request context and logging middleware for Stitch services (requires `rmi-stitch-core[asgi]`)."""
+"""Per-request context and logging middleware (requires `rmi-stitch-core[asgi]`)."""
 
 from stitch.core._internal.observability.middleware import (
     RequestContextMiddleware,
