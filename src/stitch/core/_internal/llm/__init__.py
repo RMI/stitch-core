@@ -1,8 +1,5 @@
-import asyncio
 import json
-from collections.abc import Collection
-from datetime import UTC, datetime
-from functools import lru_cache
+from datetime import datetime
 
 from openai import AsyncOpenAI, OpenAIError
 from pydantic import ValidationError
@@ -12,25 +9,15 @@ from .model import FieldSuggestion, SuggestedValue
 from .settings import LLMSettings
 from .typings import AISuggestable
 
-
-@lru_cache
-def get_llm_settings() -> LLMSettings:
-    return LLMSettings()
-
-
-@lru_cache
-def get_llm_client() -> AsyncOpenAI:
-    settings = get_llm_settings()
-    if not settings.azure_openai_configured:
-        raise LLMConfigurationError("Azure OpenAI settings are not configured.")
-    assert settings.azure_openai_base_url is not None
-    assert settings.azure_openai_api_key is not None
-    return AsyncOpenAI(
-        base_url=str(settings.azure_openai_base_url),
-        api_key=settings.azure_openai_api_key.get_secret_value(),
-        timeout=settings.azure_openai_timeout_seconds,
-        max_retries=0,
-    )
+__all__ = [
+    "AISuggestable",
+    "AzureResponsesError",
+    "FieldSuggestion",
+    "LLMConfigurationError",
+    "LLMSettings",
+    "ModelOutputError",
+    "SuggestedValue",
+]
 
 
 async def _suggest(
@@ -40,6 +27,7 @@ async def _suggest(
     field: str,
     detail_view: AISuggestable,
     observed_at: datetime,
+    settings: LLMSettings,
 ) -> FieldSuggestion:
     field_info = type(detail_view.data).model_fields[field]
     description = field_info.description or field
@@ -47,7 +35,7 @@ async def _suggest(
     sources = json.dumps([source.model_dump(mode="json") for source in detail_view.source_data])
     try:
         response = await client.responses.parse(
-            model=get_llm_settings().azure_openai_model or "",
+            model=settings.azure_openai_model or "",
             instructions=(
                 f"You infer the `{field}` value for one oil and gas field. That field "
                 f"means: {description} Search the public web for evidence and cite "
@@ -81,34 +69,3 @@ async def _suggest(
         observed_at=observed_at,
         foundry_response=response.model_dump(mode="json"),
     )
-
-
-async def suggest_missing_field_values(
-    *,
-    resource_id: int,
-    detail_view: AISuggestable,
-    fields: Collection[str],
-) -> list[FieldSuggestion]:
-
-    requested = set(fields)
-    targets = [
-        field
-        for field in detail_view.suggestable_fields
-        if field in requested and getattr(detail_view.data, field) is None
-    ]
-    if not targets:
-        return []
-
-    client = get_llm_client()
-    observed_at = datetime.now(UTC)
-    calls = [
-        _suggest(
-            client=client,
-            resource_id=resource_id,
-            field=field,
-            detail_view=detail_view,
-            observed_at=observed_at,
-        )
-        for field in targets
-    ]
-    return list(await asyncio.gather(*calls))
