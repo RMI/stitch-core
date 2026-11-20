@@ -114,7 +114,7 @@ def test_context_vars_reset_when_a_hook_raises(raising_hook) -> None:
 
 def test_middleware_import_without_starlette_points_at_asgi_extra(monkeypatch) -> None:
     # Starlette is an optional `asgi` extra, guarded at the middleware's top-level
-    # import. Simulate a consumer that installed stitch-observability WITHOUT the
+    # import. Simulate a consumer that installed rmi-stitch-core WITHOUT the
     # extra and assert the import fails with a message naming the extra, not a
     # bare ModuleNotFoundError. All sys.modules edits go through monkeypatch so
     # they're restored at teardown and the suite stays order-independent.
@@ -128,5 +128,5 @@ def test_middleware_import_without_starlette_points_at_asgi_extra(monkeypatch) -
             monkeypatch.delitem(sys.modules, name, raising=False)
     monkeypatch.setitem(sys.modules, "starlette", None)
 
-    with pytest.raises(ModuleNotFoundError, match=r"stitch-observability\[asgi\]"):
+    with pytest.raises(ModuleNotFoundError, match=r"rmi-stitch-core\[asgi\]"):
         importlib.import_module("stitch.core.observability.middleware")

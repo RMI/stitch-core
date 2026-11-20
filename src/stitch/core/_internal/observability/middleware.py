@@ -30,7 +30,7 @@ except ModuleNotFoundError as exc:
     # rather than a bare import error when this ASGI-only module is imported.
     raise ModuleNotFoundError(
         "stitch.core.observability.middleware requires Starlette; "
-        "install it via the extra: stitch-observability[asgi]"
+        "install it via the extra: rmi-stitch-core[asgi]"
     ) from exc
 
 if TYPE_CHECKING:
