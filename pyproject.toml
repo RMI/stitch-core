@@ -7,6 +7,18 @@ authors = [{ name = "Michael Barlow", email = "mbarlow@rmi.org" }]
 requires-python = ">=3.12"
 dependencies = ["pydantic>=2.14.3"]
 
+[project.optional-dependencies]
+observability = [
+  "opentelemetry-sdk>=1.30.0",
+  "opentelemetry-exporter-otlp-proto-grpc>=1.30.0",
+  "opentelemetry-instrumentation-fastapi>=0.65b0",
+  "opentelemetry-instrumentation-sqlalchemy>=0.65b0",
+  "opentelemetry-instrumentation-httpx>=0.65b0",
+  "pydantic-settings>=2.15.0",
+]
+# Middleware needs Starlette, and importing it loads the observability package.
+asgi = ["rmi-stitch-core[observability]", "starlette>=1.6.0"]
+
 [build-system]
 requires = ["uv_build>=0.13.7,<0.14.0"]
 build-backend = "uv_build"
@@ -15,7 +27,14 @@ build-backend = "uv_build"
 module-name = ["stitch.core"]
 
 [dependency-groups]
-dev = ["pytest>=9.2.0", "ruff>=0.17.3", "ty>=0.0.97"]
+dev = [
+    "fastapi>=0.162.0",
+    "httpx>=0.28.0",
+    "pytest>=9.2.0",
+    "ruff>=0.17.3",
+    "sqlalchemy>=2.1.9",
+    "ty>=0.0.97",
+]
 
 [tool.ruff]
 extend-exclude = ["_exclude"]
