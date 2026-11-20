@@ -121,6 +121,9 @@ def test_middleware_import_without_starlette_points_at_asgi_extra(monkeypatch) -
 
     # Force the guarded imports to run again on re-import.
     monkeypatch.delitem(sys.modules, "stitch.core.observability.middleware", raising=False)
+    monkeypatch.delitem(
+        sys.modules, "stitch.core._internal.observability.middleware", raising=False
+    )
     # Make `import starlette` fail: drop cached submodules and point the parent at
     # None — the canonical way to make an installed package look absent.
     for name in list(sys.modules):
