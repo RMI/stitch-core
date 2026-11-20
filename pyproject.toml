@@ -5,7 +5,11 @@ description = "Core functionality for the Stitch platform."
 readme = "README.md"
 authors = [{ name = "Michael Barlow", email = "mbarlow@rmi.org" }]
 requires-python = ">=3.12"
-dependencies = ["pydantic>=2.14.3"]
+dependencies = [
+    "openai>=3.57.0",
+    "pydantic>=2.14.3",
+    "pydantic-settings>=2.16.3",
+]
 
 [build-system]
 requires = ["uv_build>=0.13.7,<0.14.0"]
